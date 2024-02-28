@@ -15,6 +15,7 @@ Shader "Unlit/OutlineStencilBufferSimpleObject"
 
         Pass
         {
+            Cull Off
              Stencil
              {
                  Ref 2

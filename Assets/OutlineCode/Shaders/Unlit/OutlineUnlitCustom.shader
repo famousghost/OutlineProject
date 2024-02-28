@@ -15,6 +15,7 @@ Shader "Unlit/OutlineUnlitCustomLeafs"
 
         Pass
         {
+            Cull Off
              Stencil
              {
                  Ref 3
