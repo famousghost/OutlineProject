@@ -15,6 +15,7 @@ Shader "Unlit/StencilBufferSimpleObject"
 
         Pass
         {
+            ZTest Always
             Cull Off
             Blend SrcAlpha OneMinusSrcAlpha
 

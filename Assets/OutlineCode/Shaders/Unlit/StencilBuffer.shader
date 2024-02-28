@@ -15,12 +15,13 @@ Shader "Unlit/StencilBufferLeafs"
 
         Pass
         {
+            ZTest Always
             Cull Off
             Blend SrcAlpha OneMinusSrcAlpha
 
              Stencil
              {
-                 Ref 3
+                 Ref 2
                  Comp Always
                  Pass Replace
              }    

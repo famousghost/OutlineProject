@@ -15,10 +15,11 @@ Shader "Unlit/OutlineUnlitCustomLeafs"
 
         Pass
         {
+            ZTest Always
             Cull Off
              Stencil
              {
-                 Ref 3
+                 Ref 2
                  Comp NotEqual
              }    
 

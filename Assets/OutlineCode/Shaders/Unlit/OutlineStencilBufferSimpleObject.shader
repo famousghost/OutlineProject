@@ -15,6 +15,7 @@ Shader "Unlit/OutlineStencilBufferSimpleObject"
 
         Pass
         {
+            ZTest Always
             Cull Off
              Stencil
              {
