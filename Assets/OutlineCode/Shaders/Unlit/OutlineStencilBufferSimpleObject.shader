@@ -59,7 +59,7 @@ Shader "Unlit/OutlineStencilBufferSimpleObject"
                 float3 viewPosition = UnityObjectToViewPos(v.vertex);
                 float3 viewNormal = normalize(mul((float3x3)UNITY_MATRIX_IT_MV, v.normal));
 
-                o.vertex = UnityViewToClipPos(viewPosition + viewNormal * -viewPosition.z * _OutlineScale / 1000.0f);
+                o.vertex = UnityViewToClipPos(viewPosition + viewNormal * _OutlineScale / 1000.0f);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }
