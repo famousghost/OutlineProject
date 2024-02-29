@@ -33,7 +33,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _OutlineScale: 10
+    - _OutlineScale: 5
     m_Colors:
     - _OutlineColor: {r: 0, g: 1, b: 0, a: 1}
     - _Tiling: {r: 2, g: 1, b: 1, a: 1}

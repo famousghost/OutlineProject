@@ -7,6 +7,7 @@ Shader "Unlit/OutlineUnlitCustomLeafs"
         _OutlineColor ("Outline Color", Color) = (1, 1, 1, 1)
         _Tiling ("Tiling", Vector) = (1, 1, 1, 1)
         _OutlineScale("Outline Scale", Float) = 0.0
+        _AlphaCutoff("AlphaCutoff", Float) = 0.0
     }
     SubShader
     {
@@ -52,6 +53,7 @@ Shader "Unlit/OutlineUnlitCustomLeafs"
             float4 _OutlineColor;
             float2 _Tiling;
             float _OutlineScale;
+            float _AlphaCutoff;
 
 
             v2f vert (appdata v)
@@ -70,7 +72,7 @@ Shader "Unlit/OutlineUnlitCustomLeafs"
             {
                 // sample the texture
                 float4 col = tex2D(_LeafTexture, i.uv * _Tiling);
-                if(col.a <= 0.0f)
+                if(col.a <= _AlphaCutoff)
                 {
                     discard;
                 }
