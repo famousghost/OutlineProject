@@ -15,6 +15,7 @@ Shader "Unlit/StencilBufferSimpleObject"
 
         Pass
         {
+            ColorMask 0
             ZTest Always
             Cull Off
             Blend SrcAlpha OneMinusSrcAlpha
@@ -58,8 +59,10 @@ Shader "Unlit/StencilBufferSimpleObject"
             v2f vert (appdata v)
             {
                 v2f o;
-                v.vertex.xyz += v.normal * _OutlineScale; 
-                o.vertex = UnityObjectToClipPos(v.vertex);
+                float3 viewPosition = UnityObjectToViewPos(v.vertex);
+                float3 viewNormal = normalize(mul((float3x3)UNITY_MATRIX_IT_MV, v.normal));
+
+                o.vertex = UnityViewToClipPos(viewPosition + viewNormal * _OutlineScale / 1000.0f);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }
