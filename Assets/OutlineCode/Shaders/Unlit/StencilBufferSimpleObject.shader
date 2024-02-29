@@ -16,6 +16,7 @@ Shader "Unlit/StencilBufferSimpleObject"
         Pass
         {
             ColorMask 0
+            ZWrite Off
             ZTest Always
             Cull Off
             Blend SrcAlpha OneMinusSrcAlpha
