@@ -1,18 +1,19 @@
-Shader "Renderers/NewRenderersCustomPass"
+Shader "Renderers/CustomStencilHDRP"
 {
     Properties
     {
-        _Color("Color", Color) = (1,1,1,1)
-        _ColorMap("ColorMap", 2D) = "white" {}
-
-        // Transparency
         _AlphaCutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
         [HideInInspector]_BlendMode("_BlendMode", Range(0.0, 1.0)) = 0.5
+
+        _LeafTexture("Leaf Texture", 2D) = "white" {}
+        _Tiling("Tiling", Vector) = (1, 1, 1, 1)
+        _OutlineSize("Outline Scale", Float) = 0.0
+        _AlphaCutoffEnable("_AlphaCutoffEnable", Float) = 0.0
     }
 
     HLSLINCLUDE
 
-    #pragma target 4.5
+    #pragma target 5.0
     #pragma only_renderers d3d11 playstation xboxone xboxseries vulkan metal switch
 
     // #pragma enable_d3d11_debug_symbols
@@ -33,9 +34,9 @@ Shader "Renderers/NewRenderersCustomPass"
 
             Blend Off
             ZWrite Off
-            ZTest LEqual
+            ZTest Always
 
-            Cull Back
+            Cull Off
 
             HLSLPROGRAM
 
@@ -69,27 +70,29 @@ CBUFFER_START(UnityPerMaterial)
 
             float _AlphaCutoff;
             float _BlendMode;
+
+            sampler2D _LeafTexture;
+
+            float4 _OutlineColor;
+            float2 _Tiling;
+            float _OutlineSize;
+            float _AlphaCutoffEnable;
 CBUFFER_END
 
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/RenderPass/CustomPass/CustomPassRenderersV2.hlsl"
 
             // If you need to modify the vertex datas, you can uncomment this code
             // Note: all the transformations here are done in object space
-            // #define HAVE_MESH_MODIFICATION
-            // AttributesMesh ApplyMeshModification(AttributesMesh input, float3 timeParameters)
-            // {
-            //     input.positionOS += input.normalOS * 0.0001; // inflate a bit the mesh to avoid z-fight
-            //     return input;
-            // }
+            #define HAVE_MESH_MODIFICATION
+            AttributesMesh ApplyMeshModification(AttributesMesh input, float3 timeParameters)
+            {
+                input.positionOS += input.normalOS * 0.0001;
+                return input;
+            }
 
             // Put the code to render the objects in your custom pass in this function
             void GetSurfaceAndBuiltinData(FragInputs fragInputs, float3 viewDirection, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
             {
-                float2 colorMapUv = TRANSFORM_TEX(fragInputs.texCoord0.xy, _ColorMap);
-                float4 result = SAMPLE_TEXTURE2D(_ColorMap, s_trilinear_clamp_sampler, colorMapUv) * _Color;
-                float opacity = result.a;
-                float3 color = result.rgb;
-
 #ifdef _ALPHATEST_ON
                 DoAlphaTest(opacity, _AlphaCutoff);
 #endif
@@ -97,9 +100,9 @@ CBUFFER_END
                 // Write back the data to the output structures
                 ZERO_BUILTIN_INITIALIZE(builtinData); // No call to InitBuiltinData as we don't have any lighting
                 ZERO_INITIALIZE(SurfaceData, surfaceData);
-                builtinData.opacity = opacity;
+                builtinData.opacity = 0.0f;
                 builtinData.emissiveColor = float3(0, 0, 0);
-                surfaceData.color = color;
+                surfaceData.color = _OutlineColor;
             }
 
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPassForwardUnlit.hlsl"

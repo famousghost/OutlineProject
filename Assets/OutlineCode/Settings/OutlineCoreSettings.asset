@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 01334adb40b873c479572841cf624310, type: 3}
+  m_Name: OutlineCoreSettings
+  m_EditorClassIdentifier: 
+  _DefaultOutlineSize: 15
+  _DefaultOutlineColor: {r: 0, g: 1, b: 0, a: 0}
+  _StencilBufferShader: {fileID: 4800000, guid: 00acb77ea50028c428fddf573a4d3f21,
+    type: 3}
+  _OutlineShader: {fileID: 4800000, guid: f33a27c215ad09041ba4358ac94acdbf, type: 3}
