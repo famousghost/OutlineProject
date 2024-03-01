@@ -1,5 +1,6 @@
 namespace McOutlineFeature
 {
+    using System.Collections.Generic;
     using UnityEngine;
 
     public sealed class OutlineObject : MonoBehaviour
@@ -21,11 +22,11 @@ namespace McOutlineFeature
         public Color OutlineColor => _OutlineColor;
 
         public float AlphaCutoff => _AlphaCutoff;
-        public float AlphaCutoffEnable => _AlphaCutoffEnable;
+        public List<float> AlphaCutoffEnable => _AlphaCutoffEnable;
 
-        public Texture AlphaTextureToAlphaCutoff => _AlphaTextureToAlphaCutoff;
+        public List<Texture> AlphaTextureToAlphaCutoff => _AlphaTextureToAlphaCutoff;
 
-        public Vector2 Tiling => _Tiling;
+        public List<Vector2> Tiling => _Tiling;
 
         public bool OutlineActive => _OutlineActive;
 
@@ -130,9 +131,9 @@ namespace McOutlineFeature
         
         //Properties from materials
         private float _AlphaCutoff;
-        private float _AlphaCutoffEnable;
-        private Texture _AlphaTextureToAlphaCutoff;
-        private Vector2 _Tiling;
+        private List<float> _AlphaCutoffEnable = new List<float>();
+        [SerializeField] private List<Texture> _AlphaTextureToAlphaCutoff = new List<Texture>();
+        private List<Vector2> _Tiling = new List<Vector2>();
         private bool _OutlineActive;
 
         private Shader _StencilBufferShader;
@@ -165,7 +166,8 @@ namespace McOutlineFeature
                 private void Deinitialize()
                 {
                     _AlphaCutoff = 0.0f;
-                    _Tiling = new Vector2(1.0f, 1.0f);
+                    _Tiling.Clear();
+                    _AlphaTextureToAlphaCutoff.Clear();
                 }
 
                 private void CreateShaders()
@@ -185,7 +187,7 @@ namespace McOutlineFeature
                     {
 
                         _AlphaCutoff = materials[i].GetFloat(_AlphaCutoffId);
-                        _Tiling = materials[i].GetTextureScale(_BaseColorMapId);
+                        _Tiling.Add(materials[i].GetTextureScale(_BaseColorMapId));
                     }
 
                 }
@@ -200,9 +202,9 @@ namespace McOutlineFeature
             {
                 var currentMaterial = _CurrentMeshRenderer.materials[i];
                 _AlphaCutoff = currentMaterial.GetFloat(_AlphaCutoffId);
-                _Tiling = currentMaterial.GetTextureScale(_BaseColorMapId);
-                _AlphaTextureToAlphaCutoff = currentMaterial.GetTexture(_BaseColorMapId);
-                _AlphaCutoffEnable = currentMaterial.GetFloat(_AlphaCutoffEnableId);
+                _Tiling.Add(currentMaterial.GetTextureScale(_BaseColorMapId));
+                _AlphaTextureToAlphaCutoff.Add(currentMaterial.GetTexture(_BaseColorMapId));
+                _AlphaCutoffEnable.Add(currentMaterial.GetFloat(_AlphaCutoffEnableId));
             }
         }
 

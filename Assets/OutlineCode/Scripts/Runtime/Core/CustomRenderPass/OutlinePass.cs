@@ -70,23 +70,27 @@ namespace McOutlineFeature
                     }
                     var outlineRenderer = outlineObject.Renderer;
 
-                    _OutlineMaterialPropertyBlock.SetFloat(_OutlineSizeId, outlineObject.OutlineSize);
-                    _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffId, outlineObject.AlphaCutoff);
-                    _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffEnableId, outlineObject.AlphaCutoffEnable);
-                    _OutlineMaterialPropertyBlock.SetColor(_OutlineColorId, outlineObject.OutlineColor);
-                    if (outlineObject.AlphaTextureToAlphaCutoff == null)
-                    {
-                        _OutlineMaterialPropertyBlock.SetTexture(_LeafTextureId, Texture2D.whiteTexture);
-                    }
-                    else
-                    {
-                        _OutlineMaterialPropertyBlock.SetTexture(_LeafTextureId, outlineObject.AlphaTextureToAlphaCutoff);
-                    }
-                    _OutlineMaterialPropertyBlock.SetVector(_TilingId, outlineObject.Tiling);
 
-                    outlineRenderer.SetPropertyBlock(_OutlineMaterialPropertyBlock);
-                    outlineRenderer.enabled = true;
-                    cmd.DrawRenderer(outlineRenderer, renderMaterial);
+                    for (int i = 0; i < outlineRenderer.materials.Length; ++i)
+                    {
+                        _OutlineMaterialPropertyBlock.SetFloat(_OutlineSizeId, outlineObject.OutlineSize);
+                        _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffId, outlineObject.AlphaCutoff);
+                        _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffEnableId, outlineObject.AlphaCutoffEnable[i]);
+                        _OutlineMaterialPropertyBlock.SetColor(_OutlineColorId, outlineObject.OutlineColor);
+                        if (outlineObject.AlphaTextureToAlphaCutoff[i] == null)
+                        {
+                            _OutlineMaterialPropertyBlock.SetTexture(_LeafTextureId, Texture2D.whiteTexture);
+                        }
+                        else
+                        {
+                            _OutlineMaterialPropertyBlock.SetTexture(_LeafTextureId, outlineObject.AlphaTextureToAlphaCutoff[i]);
+                        }
+                        _OutlineMaterialPropertyBlock.SetVector(_TilingId, outlineObject.Tiling[i]);
+
+                        outlineRenderer.SetPropertyBlock(_OutlineMaterialPropertyBlock, i);
+
+                        cmd.DrawRenderer(outlineRenderer, renderMaterial, i);
+                    }
                 }
             }
         }
