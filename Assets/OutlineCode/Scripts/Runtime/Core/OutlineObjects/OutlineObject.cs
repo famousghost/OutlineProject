@@ -90,6 +90,7 @@ namespace McOutlineFeature
                 _OutlineColor = McOutlineManager.Instance.Settings.DefaultOutlineColor;
             }
 #if UNITY_EDITOR
+            Deinitialize();
             UpdateMaterialsProperties();
             if(_Enable)
             {
@@ -121,7 +122,7 @@ namespace McOutlineFeature
 
             Deinitialize();
         }
-#endregion Unity Methods
+        #endregion Unity Methods
 
         #region Private Variables
 
@@ -144,53 +145,53 @@ namespace McOutlineFeature
 
         #region Private Methods
 
-                private void Initialize()
-                {
-                    _CurrentMeshRenderer = GetComponent<MeshRenderer>();
-                    CreateShaders();
-                    if (_StencilBufferShader == null)
-                    {
-                        Debug.LogError("There is no Stencil buffer shader in project");
-                        return;
-                    }
-                    if (_OutlineShader == null)
-                    {
-                        Debug.LogError("There is no Outline shader in project");
-                        return;
-                    }
+        private void Initialize()
+        {
+            _CurrentMeshRenderer = GetComponent<MeshRenderer>();
+            CreateShaders();
+            if (_StencilBufferShader == null)
+            {
+                Debug.LogError("There is no Stencil buffer shader in project");
+                return;
+            }
+            if (_OutlineShader == null)
+            {
+                Debug.LogError("There is no Outline shader in project");
+                return;
+            }
 
-                    CreateMaterials();
-                    UpdateMaterialsProperties();
-                }
+            CreateMaterials();
+            UpdateMaterialsProperties();
+        }
 
-                private void Deinitialize()
-                {
-                    _AlphaCutoff = 0.0f;
-                    _Tiling.Clear();
-                    _AlphaTextureToAlphaCutoff.Clear();
-                }
+        private void Deinitialize()
+        {
+            _Tiling.Clear();
+            _AlphaTextureToAlphaCutoff.Clear();
+            _AlphaCutoffEnable.Clear();
+        }
 
-                private void CreateShaders()
-                {
-                    if(McOutlineManager.Instance == null)
-                    {
-                        return;
-                    }
-                    _OutlineShader = McOutlineManager.Instance.Settings.OutlineShader;
-                    _StencilBufferShader = McOutlineManager.Instance.Settings.StencilBufferShader;
-                }
+        private void CreateShaders()
+        {
+            if(McOutlineManager.Instance == null)
+            {
+                return;
+            }
+            _OutlineShader = McOutlineManager.Instance.Settings.OutlineShader;
+            _StencilBufferShader = McOutlineManager.Instance.Settings.StencilBufferShader;
+        }
 
-                private void CreateMaterials()
-                {
-                    var materials = _CurrentMeshRenderer.materials;
-                    for (int i = 0; i < materials.Length; ++i)
-                    {
+        private void CreateMaterials()
+        {
+            var materials = _CurrentMeshRenderer.materials;
+            for (int i = 0; i < materials.Length; ++i)
+            {
 
-                        _AlphaCutoff = materials[i].GetFloat(_AlphaCutoffId);
-                        _Tiling.Add(materials[i].GetTextureScale(_BaseColorMapId));
-                    }
+                _AlphaCutoff = materials[i].GetFloat(_AlphaCutoffId);
+                _Tiling.Add(materials[i].GetTextureScale(_BaseColorMapId));
+            }
 
-                }
+        }
 
         private void UpdateMaterialsProperties()
         {
