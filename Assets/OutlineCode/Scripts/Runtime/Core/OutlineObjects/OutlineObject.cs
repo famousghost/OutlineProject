@@ -27,19 +27,19 @@ namespace McOutlineFeature
 
         public Vector2 Tiling => _Tiling;
 
-        public bool IsActive => _IsActive;
+        public bool OutlineActive => _OutlineActive;
 
         #endregion Public Variables
 
         #region Public Methods
         public void DisableOutline()
         {
-            _IsActive = false;
+            _OutlineActive = false;
         }
 
         public void EnableOutline()
         {
-            _IsActive = true;
+            _OutlineActive = true;
         }
         #endregion Public Methods
 
@@ -47,6 +47,17 @@ namespace McOutlineFeature
 
         private void Start()
         {
+#if UNITY_EDITOR
+            UpdateMaterialsProperties();
+            if (_Enable)
+            {
+                EnableOutline();
+            }
+            else
+            {
+                DisableOutline();
+            }
+#endif
             if (McOutlineManager.Instance != null)
             {
                 McOutlineManager.Instance.Register(this);
@@ -122,7 +133,7 @@ namespace McOutlineFeature
         private float _AlphaCutoffEnable;
         private Texture _AlphaTextureToAlphaCutoff;
         private Vector2 _Tiling;
-        private bool _IsActive;
+        private bool _OutlineActive;
 
         private Shader _StencilBufferShader;
         private Shader _OutlineShader;

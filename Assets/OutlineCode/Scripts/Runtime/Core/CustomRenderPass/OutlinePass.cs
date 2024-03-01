@@ -64,13 +64,24 @@ namespace McOutlineFeature
             {
                 foreach (var outlineObject in outlineObjects)
                 {
+                    if(!outlineObject.OutlineActive)
+                    {
+                        continue;
+                    }
                     var outlineRenderer = outlineObject.Renderer;
 
                     _OutlineMaterialPropertyBlock.SetFloat(_OutlineSizeId, outlineObject.OutlineSize);
                     _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffId, outlineObject.AlphaCutoff);
                     _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffEnableId, outlineObject.AlphaCutoffEnable);
                     _OutlineMaterialPropertyBlock.SetColor(_OutlineColorId, outlineObject.OutlineColor);
-                    //_OutlineMaterialPropertyBlock.SetTexture(_LeafTextureId, outlineObject.AlphaTextureToAlphaCutoff);
+                    if (outlineObject.AlphaTextureToAlphaCutoff == null)
+                    {
+                        _OutlineMaterialPropertyBlock.SetTexture(_LeafTextureId, Texture2D.whiteTexture);
+                    }
+                    else
+                    {
+                        _OutlineMaterialPropertyBlock.SetTexture(_LeafTextureId, outlineObject.AlphaTextureToAlphaCutoff);
+                    }
                     _OutlineMaterialPropertyBlock.SetVector(_TilingId, outlineObject.Tiling);
 
                     outlineRenderer.SetPropertyBlock(_OutlineMaterialPropertyBlock);
