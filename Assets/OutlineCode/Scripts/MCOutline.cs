@@ -1,26 +1,37 @@
 namespace McOutlineFeature
 {
     using System.Collections.Generic;
-    using Unity.VisualScripting;
     using UnityEngine;
 
+    [ExecuteAlways, ImageEffectAllowedInSceneView]
     public sealed class MCOutline : MonoBehaviour
     {
         #region Inspector Variables
         [Header("Outline Properties")]
         [SerializeField] private float _OutlineSize;
         [SerializeField] private Color _OutlineColor;
+
+        [Header("Debug")]
+        [SerializeField] private bool _Enable = true;
         #endregion Inspector Variables
 
         #region Public Methods
         public void DisableOutline()
         {
+            if(_OutlineMesh == null || _StencilMesh == null)
+            {
+                return;
+            }
             _OutlineMesh.SetActive(false);
             _StencilMesh.SetActive(false);
         }
 
         public void EnableOutline()
         {
+            if(_OutlineMesh == null || _StencilMesh == null)
+            {
+                return;
+            }
             _OutlineMesh.SetActive(true);
             _StencilMesh.SetActive(true);
         }
@@ -29,16 +40,19 @@ namespace McOutlineFeature
 
         #region Unity Methods
 
-        private void Start()
-        {
-            Initialize();
-            InstantiateChildObjects();
-        }
 
         private void OnValidate()
         {
 #if UNITY_EDITOR
             UpdateMaterialsProperties();
+            if(_Enable)
+            {
+                EnableOutline();
+            }
+            else
+            {
+                DisableOutline();
+            }    
 #endif
         }
 
@@ -50,6 +64,17 @@ namespace McOutlineFeature
         private void OnDestroy()
         {
             Deinitialize();
+        }
+
+        private void OnEnable()
+        {
+            Initialize();
+            InstantiateChildObjects();
+        }
+
+        private void OnDisable()
+        {
+            ClearObjects();
         }
         #endregion Unity Methods
 
@@ -75,14 +100,17 @@ namespace McOutlineFeature
         private Shader _StencilBufferShader;
         private Shader _OutlineShader;
 
-        [SerializeField] private List<Material> _StencilBufferMaterials;
-        [SerializeField] private List<Material> _OutlineMaterials;
+        private List<Material> _StencilBufferMaterials;
+        private List<Material> _OutlineMaterials;
+
+        private MeshRenderer _CurrentMeshRenderer;
         #endregion Private Variables
 
         #region Private Methods
 
         private void Initialize()
         {
+            _CurrentMeshRenderer = GetComponent<MeshRenderer>();
             CreateShaders();
             if (_StencilBufferShader == null)
             {
@@ -114,14 +142,12 @@ namespace McOutlineFeature
 
         private void CreateMaterials()
         {
-            _CurrentObjectMaterials = new List<Material>();
-            var materials = GetComponent<MeshRenderer>().materials;
+            var materials = _CurrentMeshRenderer.materials;
             _StencilBufferMaterials = new List<Material>();
             _OutlineMaterials = new List<Material>();
             for (int i = 0; i < materials.Length; ++i)
             {
 
-                _CurrentObjectMaterials.Add(materials[i]);
                 _AlphaCutoff = materials[i].GetFloat(_AlphaCutoffId);
                 _Tiling = materials[i].GetTextureScale(_BaseColorMapId);
                 _StencilBufferMaterials.Add(new Material(_StencilBufferShader));
@@ -132,22 +158,23 @@ namespace McOutlineFeature
 
         private void UpdateMaterialsProperties()
         {
-            if(_CurrentObjectMaterials == null || _CurrentObjectMaterials.Count == 0)
+            if(_CurrentMeshRenderer == null)
             {
                 return;
             }
-            for (int i = 0; i < _CurrentObjectMaterials.Count; ++i)
+            for (int i = 0; i < _CurrentMeshRenderer.materials.Length; ++i)
             {
-                _AlphaCutoff = _CurrentObjectMaterials[i].GetFloat(_AlphaCutoffId);
-                _Tiling = _CurrentObjectMaterials[i].GetTextureScale(_BaseColorMapId);
-                var texture = _CurrentObjectMaterials[i].GetTexture(_BaseColorMapId);
-                var alphaCutoffEnable = _CurrentObjectMaterials[i].GetFloat(_AlphaCutoffEnableId);
+                var currentMaterial = _CurrentMeshRenderer.materials[i];
+                _AlphaCutoff = currentMaterial.GetFloat(_AlphaCutoffId);
+                _Tiling = currentMaterial.GetTextureScale(_BaseColorMapId);
+                var texture = currentMaterial.GetTexture(_BaseColorMapId);
+                var alphaCutoffEnable = currentMaterial.GetFloat(_AlphaCutoffEnableId);
                 if (_StencilBufferMaterials[i] != null)
                 {
                     _StencilBufferMaterials[i].SetFloat(_AlphaCutoffId, _AlphaCutoff);
                     _StencilBufferMaterials[i].SetVector(_TilingId, _Tiling);
-                    _StencilBufferMaterials[i].SetTexture(_LeafTextureId, texture);
                     _StencilBufferMaterials[i].SetFloat(_AlphaCutoffEnableId, alphaCutoffEnable);
+                    _StencilBufferMaterials[i].SetTexture(_LeafTextureId, texture);
                 }
 
                 if (_OutlineMaterials[i] != null)
@@ -166,9 +193,10 @@ namespace McOutlineFeature
         {
             _StencilMesh = new GameObject("Stencil Object", typeof(MeshFilter), typeof(MeshRenderer));
             _StencilMesh.GetComponent<MeshFilter>().mesh = this.GetComponent<MeshFilter>().mesh;
-            
-            _StencilMesh.GetComponent<MeshRenderer>().materials = GetComponent<MeshRenderer>().materials;
-            _StencilMesh.GetComponent<MeshRenderer>().materials = _StencilBufferMaterials.ToArray();
+
+            var stencilMeshRenderer = _StencilMesh.GetComponent<MeshRenderer>();
+            stencilMeshRenderer.materials = GetComponent<MeshRenderer>().materials;
+            stencilMeshRenderer.materials = _StencilBufferMaterials.ToArray();
 
             _StencilMesh.transform.parent = transform;
             _StencilMesh.transform.localScale = Vector3.one;
@@ -178,8 +206,9 @@ namespace McOutlineFeature
             _OutlineMesh = new GameObject("Outline Object", typeof(MeshFilter), typeof(MeshRenderer));
             _OutlineMesh.GetComponent<MeshFilter>().mesh = this.GetComponent<MeshFilter>().mesh;
 
-            _OutlineMesh.GetComponent<MeshRenderer>().materials = GetComponent<MeshRenderer>().materials;
-            _OutlineMesh.GetComponent<MeshRenderer>().materials = _OutlineMaterials.ToArray();
+            var outlineMeshRenderer = _OutlineMesh.GetComponent<MeshRenderer>();
+            outlineMeshRenderer.materials = GetComponent<MeshRenderer>().materials;
+            outlineMeshRenderer.materials = _OutlineMaterials.ToArray();
 
 
             _OutlineMesh.transform.parent = transform;
@@ -190,8 +219,13 @@ namespace McOutlineFeature
 
         private void ClearObjects()
         {
+#if UNITY_EDITOR
+            DestroyImmediate(_StencilMesh);
+            DestroyImmediate(_OutlineMesh);
+#else
             Destroy(_StencilMesh);
             Destroy(_OutlineMesh);
+#endif
         }
 
         #endregion Private Methods
