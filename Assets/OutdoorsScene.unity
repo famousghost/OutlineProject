@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2262.9104, g: 2404.4026, b: 3501.8833, a: 1}
+  m_IndirectSpecularColor: {r: 2263.172, g: 2404.547, b: 3502.0122, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -732,12 +732,13 @@ GameObject:
   - component: {fileID: 1591252578}
   - component: {fileID: 1591252577}
   - component: {fileID: 1591252576}
+  - component: {fileID: 1591252579}
   m_Layer: 0
   m_Name: RedWood 4 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 4294967295
+  m_StaticEditorFlags: 0
   m_IsActive: 1
 --- !u!4 &1591252575
 Transform:
@@ -815,6 +816,22 @@ Tree:
   m_SpeedTreeWindAsset: {fileID: 0}
   m_TreeData: {fileID: 114336575978543202, guid: 7d39a68237432ea41ae92c75eb21dcf4,
     type: 3}
+--- !u!114 &1591252579
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591252574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c9c8c8e3e7013e419e7e1e216e41095, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _OutlineSize: 10
+  _OutlineColor: {r: 0, g: 1, b: 0, a: 1}
+  _StencilBufferMaterials: []
+  _OutlineMaterials: []
 --- !u!1 &1648683474
 GameObject:
   m_ObjectHideFlags: 0

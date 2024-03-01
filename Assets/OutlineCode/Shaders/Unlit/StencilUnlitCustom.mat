@@ -34,7 +34,9 @@ Material:
     m_Ints: []
     m_Floats:
     - _AlphaCutoff: 0.5
+    - _AlphaCutoffEnable: 1
     - _OutlineScale: 0
+    - _OutlineSize: 0
     m_Colors:
     - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
     - _Tiling: {r: 2, g: 1, b: 1, a: 1}

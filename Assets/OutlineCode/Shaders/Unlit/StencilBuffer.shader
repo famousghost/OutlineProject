@@ -1,4 +1,4 @@
-Shader "Unlit/StencilBufferLeafs"
+Shader "McOutline/CustomStencillBuffer"
 {
     Properties
     {
@@ -6,8 +6,9 @@ Shader "Unlit/StencilBufferLeafs"
         _LeafTexture ("Leaf Texture", 2D) = "white" {}
         _OutlineColor ("Outline Color", Color) = (1, 1, 1, 1)
         _Tiling ("Tiling", Vector) = (1, 1, 1, 1)
-        _OutlineScale("Outline Scale", Float) = 0.0
+        _OutlineSize("Outline Scale", Float) = 0.0
         _AlphaCutoff("AlphaCutoff", Float) = 0.0
+        _AlphaCutoffEnable("_AlphaCutoffEnable", Float) = 0.0
     }
     SubShader
     {
@@ -20,7 +21,6 @@ Shader "Unlit/StencilBufferLeafs"
             ZWrite Off
             ZTest Always
             Cull Off
-            Blend SrcAlpha OneMinusSrcAlpha
 
              Stencil
              {
@@ -56,8 +56,9 @@ Shader "Unlit/StencilBufferLeafs"
 
             float4 _OutlineColor;
             float2 _Tiling;
-            float _OutlineScale;
+            float _OutlineSize;
             float _AlphaCutoff;
+            float _AlphaCutoffEnable;
 
 
             v2f vert (appdata v)
@@ -66,7 +67,7 @@ Shader "Unlit/StencilBufferLeafs"
                 float3 viewPosition = UnityObjectToViewPos(v.vertex);
                 float3 viewNormal = normalize(mul((float3x3)UNITY_MATRIX_IT_MV, v.normal));
 
-                o.vertex = UnityViewToClipPos(viewPosition + viewNormal * _OutlineScale / 1000.0f);
+                o.vertex = UnityViewToClipPos(viewPosition + viewNormal * 0.001f);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }
@@ -75,7 +76,7 @@ Shader "Unlit/StencilBufferLeafs"
             {
                 // sample the texture
                 float4 col = tex2D(_LeafTexture, i.uv * _Tiling);
-                if(col.a <= _AlphaCutoff)
+                if(_AlphaCutoffEnable > 0.0f && col.a <= _AlphaCutoff)
                 {
                     discard;
                 }
