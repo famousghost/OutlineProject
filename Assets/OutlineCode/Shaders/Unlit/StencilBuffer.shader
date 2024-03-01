@@ -12,7 +12,7 @@ Shader "McOutline/CustomStencillBuffer"
     }
     SubShader
     {
-        Tags { "RenderType"="Transparent" "Queue" = "Transparent" }
+        Tags { "RenderType"="Transparent" "Queue" = "Transparent+1" }
         LOD 100
 
         Pass
@@ -24,7 +24,7 @@ Shader "McOutline/CustomStencillBuffer"
 
              Stencil
              {
-                 Ref 2
+                 Ref 15
                  Comp Always
                  Pass Replace
              }    
@@ -64,8 +64,8 @@ Shader "McOutline/CustomStencillBuffer"
             v2f vert (appdata v)
             {
                 v2f o;
-                float3 viewPosition = UnityObjectToViewPos(v.vertex);
-                float3 viewNormal = normalize(mul((float3x3)UNITY_MATRIX_IT_MV, v.normal));
+                const float3 viewPosition = UnityObjectToViewPos(v.vertex);
+                const float3 viewNormal = normalize(mul((float3x3)UNITY_MATRIX_IT_MV, v.normal));
 
                 o.vertex = UnityViewToClipPos(viewPosition + viewNormal * 0.001f);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
@@ -74,9 +74,8 @@ Shader "McOutline/CustomStencillBuffer"
 
             float4 frag (v2f i) : SV_Target
             {
-                // sample the texture
-                float4 col = tex2D(_LeafTexture, i.uv * _Tiling);
-                if(_AlphaCutoffEnable > 0.0f && col.a <= _AlphaCutoff)
+                const float alpha = tex2D(_LeafTexture, i.uv * _Tiling).a;
+                if (_AlphaCutoffEnable > 0.0f && alpha <= _AlphaCutoff)
                 {
                     discard;
                 }

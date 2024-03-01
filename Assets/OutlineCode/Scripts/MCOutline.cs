@@ -8,8 +8,8 @@ namespace McOutlineFeature
     {
         #region Inspector Variables
         [Header("Outline Properties")]
-        [SerializeField] private float _OutlineSize;
-        [SerializeField] private Color _OutlineColor;
+        [SerializeField] private float _OutlineSize = 15.0f;
+        [SerializeField] private Color _OutlineColor = Color.green;
 
         [Header("Debug")]
         [SerializeField] private bool _Enable = true;
@@ -42,8 +42,12 @@ namespace McOutlineFeature
 
         private void Start()
         {
+#if !UNITY_EDITOR
             Deinitialize();
             ClearObjects();
+            Initialize();
+            InstantiateChildObjects();
+#endif
         }
 
 
@@ -62,30 +66,34 @@ namespace McOutlineFeature
 #endif
         }
 
-        private void Update()
-        {
-
-        }
-
         private void OnDestroy()
         {
+#if !UNITY_EDITOR
             Deinitialize();
             ClearObjects();
+#endif
         }
 
         private void OnEnable()
         {
+#if UNITY_EDITOR
+            Deinitialize();
+            ClearObjects();
             Initialize();
             InstantiateChildObjects();
+#endif
         }
 
         private void OnDisable()
         {
+#if UNITY_EDITOR
+            Deinitialize();
             ClearObjects();
+#endif
         }
-        #endregion Unity Methods
+#endregion Unity Methods
 
-        #region Private Variables
+#region Private Variables
 
         private static readonly int _AlphaCutoffEnableId = Shader.PropertyToID("_AlphaCutoffEnable");
         private static readonly int _LeafTextureId = Shader.PropertyToID("_LeafTexture");
@@ -109,9 +117,9 @@ namespace McOutlineFeature
         private List<Material> _OutlineMaterials;
 
         private MeshRenderer _CurrentMeshRenderer;
-        #endregion Private Variables
+#endregion Private Variables
 
-        #region Private Methods
+#region Private Methods
 
         private void Initialize()
         {
@@ -146,7 +154,11 @@ namespace McOutlineFeature
 
         private void CreateMaterials()
         {
+#if UNITY_EDITOR
+            var materials = _CurrentMeshRenderer.sharedMaterials;
+#else
             var materials = _CurrentMeshRenderer.materials;
+#endif
             _StencilBufferMaterials = new List<Material>();
             _OutlineMaterials = new List<Material>();
             for (int i = 0; i < materials.Length; ++i)
@@ -193,8 +205,12 @@ namespace McOutlineFeature
             }
         }
 
-        private void InstantiateChildObjects()
+        private void InstantiateStencilObject()
         {
+            if (_StencilMesh != null)
+            {
+                return;
+            }
             _StencilMesh = new GameObject("Stencil Object", typeof(MeshFilter), typeof(MeshRenderer));
             _StencilMesh.GetComponent<MeshFilter>().mesh = this.GetComponent<MeshFilter>().mesh;
 
@@ -207,6 +223,15 @@ namespace McOutlineFeature
             _StencilMesh.transform.localPosition = Vector3.zero;
             _StencilMesh.transform.localRotation = Quaternion.identity;
             //_StencilMesh.hideFlags = HideFlags.HideInHierarchy;
+        }
+
+        private void InstantiateOutlineObject()
+        {
+
+            if (_OutlineMesh != null)
+            {
+                return;
+            }
 
             _OutlineMesh = new GameObject("Outline Object", typeof(MeshFilter), typeof(MeshRenderer));
             _OutlineMesh.GetComponent<MeshFilter>().mesh = this.GetComponent<MeshFilter>().mesh;
@@ -221,6 +246,12 @@ namespace McOutlineFeature
             _OutlineMesh.transform.localPosition = Vector3.zero;
             _OutlineMesh.transform.localRotation = Quaternion.identity;
             //_OutlineMesh.hideFlags = HideFlags.HideInHierarchy;
+        }
+
+        private void InstantiateChildObjects()
+        {
+            InstantiateStencilObject();
+            InstantiateOutlineObject();
         }
 
         private void ClearObjects()
@@ -246,6 +277,6 @@ namespace McOutlineFeature
 #endif
         }
 
-        #endregion Private Methods
+#endregion Private Methods
     }
 }
