@@ -40,6 +40,12 @@ namespace McOutlineFeature
 
         #region Unity Methods
 
+        private void Start()
+        {
+            Deinitialize();
+            ClearObjects();
+        }
+
 
         private void OnValidate()
         {
@@ -64,6 +70,7 @@ namespace McOutlineFeature
         private void OnDestroy()
         {
             Deinitialize();
+            ClearObjects();
         }
 
         private void OnEnable()
@@ -79,8 +86,6 @@ namespace McOutlineFeature
         #endregion Unity Methods
 
         #region Private Variables
-
-        private List<Material> _CurrentObjectMaterials;
 
         private static readonly int _AlphaCutoffEnableId = Shader.PropertyToID("_AlphaCutoffEnable");
         private static readonly int _LeafTextureId = Shader.PropertyToID("_LeafTexture");
@@ -129,7 +134,6 @@ namespace McOutlineFeature
 
         private void Deinitialize()
         {
-            _CurrentObjectMaterials.Clear();
             _AlphaCutoff = 0.0f;
             _Tiling = new Vector2(1.0f, 1.0f);
         }
@@ -202,6 +206,7 @@ namespace McOutlineFeature
             _StencilMesh.transform.localScale = Vector3.one;
             _StencilMesh.transform.localPosition = Vector3.zero;
             _StencilMesh.transform.localRotation = Quaternion.identity;
+            //_StencilMesh.hideFlags = HideFlags.HideInHierarchy;
 
             _OutlineMesh = new GameObject("Outline Object", typeof(MeshFilter), typeof(MeshRenderer));
             _OutlineMesh.GetComponent<MeshFilter>().mesh = this.GetComponent<MeshFilter>().mesh;
@@ -215,16 +220,29 @@ namespace McOutlineFeature
             _OutlineMesh.transform.localScale = Vector3.one;
             _OutlineMesh.transform.localPosition = Vector3.zero;
             _OutlineMesh.transform.localRotation = Quaternion.identity;
+            //_OutlineMesh.hideFlags = HideFlags.HideInHierarchy;
         }
 
         private void ClearObjects()
         {
 #if UNITY_EDITOR
-            DestroyImmediate(_StencilMesh);
-            DestroyImmediate(_OutlineMesh);
+            if (_StencilMesh != null)
+            {
+                DestroyImmediate(_StencilMesh);
+            }
+            if (_OutlineMesh != null)
+            {
+                DestroyImmediate(_OutlineMesh);
+            }
 #else
-            Destroy(_StencilMesh);
-            Destroy(_OutlineMesh);
+            if (_StencilMesh != null)
+            {
+                Destroy(_StencilMesh);
+            }
+            if (_OutlineMesh != null)
+            {
+                Destroy(_OutlineMesh);
+            }
 #endif
         }
 
