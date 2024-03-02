@@ -83,9 +83,7 @@ CBUFFER_START(UnityPerMaterial)
             float _AlphaCutoff;
             float _BlendMode;
 
-            float4 _OutlineColor;
             float2 _Tiling;
-            float _OutlineSize;
             float _AlphaCutoffEnable;
 CBUFFER_END
 
@@ -114,8 +112,8 @@ CBUFFER_END
                 ZERO_BUILTIN_INITIALIZE(builtinData); // No call to InitBuiltinData as we don't have any lighting
                 ZERO_INITIALIZE(SurfaceData, surfaceData);
                 builtinData.opacity = 1.0f;
-                builtinData.emissiveColor = float3(0, 0, 0);
-                surfaceData.color = _OutlineColor;
+                builtinData.emissiveColor = float3(0.0f, 0.0f, 0.0f);
+                surfaceData.color = float3(0.0f, 0.0f, 0.0f);
             }
 
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPassForwardUnlit.hlsl"

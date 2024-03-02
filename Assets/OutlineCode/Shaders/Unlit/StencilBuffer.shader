@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "McOutline/CustomStencillBuffer"
 {
     Properties
@@ -68,6 +70,8 @@ Shader "McOutline/CustomStencillBuffer"
                 const float3 viewNormal = normalize(mul((float3x3)UNITY_MATRIX_IT_MV, v.normal));
 
                 o.vertex = UnityViewToClipPos(viewPosition + viewNormal * 0.001f);
+                //v.vertex.xyz += v.normal * 0.001f;
+                //o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }

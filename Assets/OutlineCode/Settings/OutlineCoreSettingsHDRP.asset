@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 01334adb40b873c479572841cf624310, type: 3}
-  m_Name: OutlineCoreSettings
+  m_Name: OutlineCoreSettingsHDRP
   m_EditorClassIdentifier: 
   _DefaultOutlineSize: 15
   _DefaultOutlineColor: {r: 0, g: 1, b: 0, a: 0}
   _StencilBufferShader: {fileID: 4800000, guid: aaf82ecf508e9d24b85766b73f47ce3c,
     type: 3}
-  _OutlineShader: {fileID: 4800000, guid: f33a27c215ad09041ba4358ac94acdbf, type: 3}
+  _OutlineShader: {fileID: 4800000, guid: 5019bc37ec0c16b408f689ce53e7f2c5, type: 3}

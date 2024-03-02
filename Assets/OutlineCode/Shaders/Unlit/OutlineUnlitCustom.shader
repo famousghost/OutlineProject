@@ -1,3 +1,5 @@
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "McOutline/CustomOutline"
 {
     Properties
@@ -67,6 +69,8 @@ Shader "McOutline/CustomOutline"
                 const float3 viewNormal = normalize(mul((float3x3)UNITY_MATRIX_IT_MV, v.normal));
 
                 o.vertex = UnityViewToClipPos(viewPosition + viewNormal * _OutlineSize / 1000.0f);
+                //v.vertex.xyz += v.normal * _OutlineSize / 1000.0f;
+                //o.vertex = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }
