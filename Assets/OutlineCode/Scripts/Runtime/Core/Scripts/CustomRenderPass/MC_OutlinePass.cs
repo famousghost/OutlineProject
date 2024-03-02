@@ -71,19 +71,20 @@ namespace McOutlineFeature
 
                     for (int i = 0; i < outlineRenderer.materials.Length; ++i)
                     {
+                        var outlinePropertiesElement = outlineObject.OutputOutlineMaterialsProperties[i];
                         _OutlineMaterialPropertyBlock.SetFloat(_OutlineSizeId, outlineObject.OutlineSize);
-                        _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffId, outlineObject.AlphaCutoff[i]);
-                        _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffEnableId, outlineObject.AlphaCutoffEnable[i]);
+                        _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffId, outlinePropertiesElement.AlphaCutoff);
+                        _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffEnableId, outlinePropertiesElement.AlphaCutoffEnable);
                         _OutlineMaterialPropertyBlock.SetColor(_OutlineColorId, outlineObject.OutlineColor);
-                        if (outlineObject.AlphaTextureToAlphaCutoff[i] == null)
+                        if (outlinePropertiesElement.AlphaTexture == null)
                         {
                             _OutlineMaterialPropertyBlock.SetTexture(_LeafTextureId, Texture2D.whiteTexture);
                         }
                         else
                         {
-                            _OutlineMaterialPropertyBlock.SetTexture(_LeafTextureId, outlineObject.AlphaTextureToAlphaCutoff[i]);
+                            _OutlineMaterialPropertyBlock.SetTexture(_LeafTextureId, outlinePropertiesElement.AlphaTexture);
                         }
-                        _OutlineMaterialPropertyBlock.SetVector(_TilingId, outlineObject.Tiling[i]);
+                        _OutlineMaterialPropertyBlock.SetVector(_TilingId, outlinePropertiesElement.Tiling);
 
                         outlineRenderer.SetPropertyBlock(_OutlineMaterialPropertyBlock, i);
                         cmd.DrawRenderer(outlineRenderer, renderMaterial, i);
