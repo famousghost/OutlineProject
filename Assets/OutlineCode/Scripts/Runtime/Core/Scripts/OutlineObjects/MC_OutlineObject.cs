@@ -79,7 +79,9 @@ namespace McOutlineFeature
 
         public bool OutlineActive => _OutlineActive;
 
+#if UNITY_EDITOR
         public static Action _ReinitializeDelegate;
+#endif
 
         #endregion Public Variables
 
@@ -141,13 +143,17 @@ namespace McOutlineFeature
 
         private void OnEnable()
         {
+#if UNITY_EDITOR
             _ReinitializeDelegate += InitializeAndRegisterObject;
+#endif
             InitializeAndRegisterObject();
         }
 
         private void OnDisable()
         {
+#if UNITY_EDITOR
             _ReinitializeDelegate -= InitializeAndRegisterObject;
+#endif
             DeinitializeAndUnregisterObject();
         }
         #endregion Unity Methods
@@ -258,14 +264,14 @@ namespace McOutlineFeature
             MC_OutlineManager.Instance.Unregister(this);
             Deinitialize();
         }
-
+#if UNITY_EDITOR
         [UnityEditor.Callbacks.DidReloadScripts]
         private static void OnScriptsReloaded()
         {
-#if UNITY_EDITOR
+
             _ReinitializeDelegate?.Invoke();
-#endif
         }
+#endif
 
         public void OnBeforeSerialize()
         {
