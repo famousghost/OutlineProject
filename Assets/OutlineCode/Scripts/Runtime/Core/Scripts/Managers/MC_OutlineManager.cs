@@ -46,6 +46,13 @@ namespace McOutlineFeature
         {
             Instance = this;
         }
+
+        private void OnValidate()
+        {
+#if UNITY_EDITOR
+            Instance = this;
+#endif
+        }
         #endregion Unity Methods
     }
 }

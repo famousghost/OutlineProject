@@ -112,7 +112,6 @@ namespace McOutlineFeature
                 DisableOutline();
             }
 #endif
-            _CurrentMeshRenderer = GetComponent<MeshRenderer>();
             MC_OutlineManager.Instance.Register(this);
             Initialize();
         }
@@ -124,9 +123,8 @@ namespace McOutlineFeature
             {
                 return;
             }
-
-            Deinitialize();
             UpdateProperties();
+
             if(_Enable)
             {
                 EnableOutline();
@@ -176,12 +174,17 @@ namespace McOutlineFeature
 
         private void Initialize()
         {
+            _CurrentMeshRenderer = GetComponent<MeshRenderer>();
             _OutputOutlineMaterialsProperties = new List<OutputOutlineMaterialProperties>();
             UpdateProperties();
         }
 
         private void Deinitialize()
         {
+            if(_OutputOutlineMaterialsProperties == null)
+            {
+                return;
+            }
             _OutputOutlineMaterialsProperties.Clear();
         }
 
@@ -202,6 +205,10 @@ namespace McOutlineFeature
             {
                 return;
             }
+            if(_OutputOutlineMaterialsProperties == null)
+            {
+                return;
+            }
             for (int i = 0; i < _CurrentMeshRenderer.sharedMaterials.Length; ++i)
             {
                 var currentMaterial = _CurrentMeshRenderer.sharedMaterials[i];
@@ -218,7 +225,10 @@ namespace McOutlineFeature
             {
                 return;
             }
-
+            if(_OutputOutlineMaterialsProperties == null)
+            {
+                return;
+            }
             for (int i = 0; i < _CurrentMeshRenderer.sharedMaterials.Length; ++i)
             {
                 if(_OutlinePropertiesList.Count != _CurrentMeshRenderer.sharedMaterials.Length)
