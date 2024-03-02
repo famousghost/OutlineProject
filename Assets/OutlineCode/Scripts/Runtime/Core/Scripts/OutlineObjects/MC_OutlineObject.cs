@@ -4,7 +4,7 @@ namespace McOutlineFeature
     using Unity.VisualScripting;
     using UnityEngine;
 
-    public sealed class OutlineObject : MonoBehaviour
+    public sealed class MC_OutlineObject : MonoBehaviour
     {
         #region Inspector Variables
         [Header("Simple Outline Settings")]
@@ -56,7 +56,7 @@ namespace McOutlineFeature
 
         private void Start()
         {
-            if (McOutlineManager.Instance == null)
+            if (MC_OutlineManager.Instance == null)
             {
                 Debug.LogError("There is no McOutlineManager please add it then proceed work with outline feature");
                 return;
@@ -73,14 +73,14 @@ namespace McOutlineFeature
             }
 #endif
             _CurrentMeshRenderer = GetComponent<MeshRenderer>();
-            McOutlineManager.Instance.Register(this);
+            MC_OutlineManager.Instance.Register(this);
             Initialize();
         }
 
         private void OnValidate()
         {
 #if UNITY_EDITOR
-            if (McOutlineManager.Instance == null)
+            if (MC_OutlineManager.Instance == null)
             {
                 return;
             }
@@ -100,21 +100,21 @@ namespace McOutlineFeature
 
         private void OnEnable()
         {
-            if (McOutlineManager.Instance == null)
+            if (MC_OutlineManager.Instance == null)
             {
                 return;
             }
-            McOutlineManager.Instance.Register(this);
+            MC_OutlineManager.Instance.Register(this);
             Initialize();
         }
 
         private void OnDisable()
         {
-            if (McOutlineManager.Instance == null)
+            if (MC_OutlineManager.Instance == null)
             {
                 return;
             }
-            McOutlineManager.Instance.Unregister(this);
+            MC_OutlineManager.Instance.Unregister(this);
             Deinitialize();
         }
         #endregion Unity Methods

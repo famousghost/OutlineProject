@@ -4,14 +4,15 @@ namespace McOutlineFeature
     using System.Collections.Generic;
     using UnityEngine;
 
-    public sealed class McOutlineManager : MonoBehaviour
+
+    public sealed class MC_OutlineManager : MonoBehaviour
     {
         #region Inspector Variables
         [SerializeField] private Mc_OutlineSettings _Settings;
         #endregion Inspector Variables
 
         #region Public Methods
-        public void Register(OutlineObject outline)
+        public void Register(MC_OutlineObject outline)
         {
             if (!OutlineObjects.Contains(outline))
             {
@@ -19,7 +20,7 @@ namespace McOutlineFeature
             }
         }
 
-        public void Unregister(OutlineObject outline)
+        public void Unregister(MC_OutlineObject outline)
         {
             if(OutlineObjects.Contains(outline))
             {
@@ -29,14 +30,14 @@ namespace McOutlineFeature
         #endregion Public Methods
 
         #region Public Variables
-        public List<OutlineObject> OutlineObjects = new List<OutlineObject>();
+        public List<MC_OutlineObject> OutlineObjects = new List<MC_OutlineObject>();
         public Mc_OutlineSettings Settings
         {
             get => _Settings;
             private set { _Settings = value; }
         }
 
-        public static McOutlineManager Instance;
+        public static MC_OutlineManager Instance;
         #endregion Public Variables
 
         #region Unity Methods

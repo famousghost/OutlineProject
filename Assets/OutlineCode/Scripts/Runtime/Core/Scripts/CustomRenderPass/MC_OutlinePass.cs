@@ -5,7 +5,7 @@ namespace McOutlineFeature
     using UnityEngine.Rendering.HighDefinition;
     using UnityEngine.Rendering;
 
-    public sealed class OutlineCustomPass : CustomPass
+    public sealed class MC_OutlineCustomPass : CustomPass
     {
         [SerializeField, HideInInspector]
         private Shader _StencilBufferShader;
@@ -29,12 +29,12 @@ namespace McOutlineFeature
 
         protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
         {
-            if(McOutlineManager.Instance == null)
+            if(MC_OutlineManager.Instance == null)
             {
                 return;
             }
-            _StencilBufferShader = McOutlineManager.Instance.Settings.StencilBufferShader;
-            _OutlineShader = McOutlineManager.Instance.Settings.OutlineShader;
+            _StencilBufferShader = MC_OutlineManager.Instance.Settings.StencilBufferShader;
+            _OutlineShader = MC_OutlineManager.Instance.Settings.OutlineShader;
 
             _OutlineMaterialPropertyBlock = new MaterialPropertyBlock();
 
@@ -51,12 +51,12 @@ namespace McOutlineFeature
         private void RenderObjects(CommandBuffer cmd, Material renderMaterial)
         {
 
-            if (McOutlineManager.Instance == null)
+            if (MC_OutlineManager.Instance == null)
             {
 
                 return;
             }
-            var outlineObjects = McOutlineManager.Instance.OutlineObjects;
+            var outlineObjects = MC_OutlineManager.Instance.OutlineObjects;
             if (outlineObjects.Count != 0)
             {
 

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2263.172, g: 2404.555, b: 3502.0747, a: 1}
+  m_IndirectSpecularColor: {r: 2262.0608, g: 2403.5315, b: 3501.0396, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1136,6 +1136,66 @@ PrefabInstance:
         type: 3}
       propertyPath: useTargetCamera
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238011466300130279, guid: 652b86db32991384993308c79abe676a,
+        type: 3}
+      propertyPath: customPasses.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238011466300130279, guid: 652b86db32991384993308c79abe676a,
+        type: 3}
+      propertyPath: customPasses.Array.data[0]
+      value: 6223894464002261024
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238011466300130279, guid: 652b86db32991384993308c79abe676a,
+        type: 3}
+      propertyPath: managedReferences[6223894464002261024]
+      value: Assembly-CSharp McOutlineFeature.MC_OutlineCustomPass
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238011466300130279, guid: 652b86db32991384993308c79abe676a,
+        type: 3}
+      propertyPath: managedReferences[6223894464002261024].m_Name
+      value: Custom Pass
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238011466300130279, guid: 652b86db32991384993308c79abe676a,
+        type: 3}
+      propertyPath: managedReferences[6223894464002261024].enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238011466300130279, guid: 652b86db32991384993308c79abe676a,
+        type: 3}
+      propertyPath: managedReferences[6223894464002261024].m_Version
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238011466300130279, guid: 652b86db32991384993308c79abe676a,
+        type: 3}
+      propertyPath: managedReferences[6223894464002261024].clearFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238011466300130279, guid: 652b86db32991384993308c79abe676a,
+        type: 3}
+      propertyPath: managedReferences[6223894464002261024].passFoldout
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238011466300130279, guid: 652b86db32991384993308c79abe676a,
+        type: 3}
+      propertyPath: managedReferences[6223894464002261024]._OutlineShader
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238011466300130279, guid: 652b86db32991384993308c79abe676a,
+        type: 3}
+      propertyPath: managedReferences[6223894464002261024].targetColorBuffer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238011466300130279, guid: 652b86db32991384993308c79abe676a,
+        type: 3}
+      propertyPath: managedReferences[6223894464002261024].targetDepthBuffer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8238011466300130279, guid: 652b86db32991384993308c79abe676a,
+        type: 3}
+      propertyPath: managedReferences[6223894464002261024]._StencilBufferShader
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
