@@ -4,6 +4,7 @@ namespace McOutlineFeature
     using System.Collections.Generic;
     using UnityEditor;
     using UnityEngine;
+    using UnityEngine.UI;
 
     [Serializable]
     public struct OutlineMaterialProperties
@@ -46,15 +47,15 @@ namespace McOutlineFeature
     }
 
     [ExecuteAlways]
-    public sealed class MC_OutlineObject : MonoBehaviour, ISerializationCallbackReceiver
+    public sealed class MC_OutlineObject : MonoBehaviour
     {
         #region Inspector Variables
         [Header("Simple Outline Settings")]
         [Tooltip("Outline size value"), SerializeField] 
-        private float _OutlineSize;
+        private float _OutlineSize = 15.0f;
 
         [Tooltip("Outline color value"), SerializeField] 
-        private Color _OutlineColor;
+        private Color _OutlineColor = Color.green;
 
         [Header("Advanced Outline Settings")]
         [Tooltip("Activate advanced settings\nthis checkbox activates that alpha cutoff properties can be set by developer"), SerializeField] 
@@ -64,7 +65,7 @@ namespace McOutlineFeature
         List<OutlineMaterialProperties> _OutlinePropertiesList;
 
         [Header("Debug")]
-        [Tooltip("Only debug purpose to show enable/disable feature for object"), SerializeField] 
+        [Tooltip("Only debug purpose to show enable/disable feature for object\nWorks only in editor"), SerializeField] 
         private bool _Enable = true;
 
         #endregion Inspector Variables
@@ -79,7 +80,10 @@ namespace McOutlineFeature
 
         public bool OutlineActive => _OutlineActive;
 
-        public static Action _ReinitializeDelegate;
+#if UNITY_EDITOR
+        public static Action _InitializeAndRegisterObjectsDelegate;
+        public static Action _DeinitializeAndUnregisterObjectsDelegate;
+#endif
 
         #endregion Public Variables
 
@@ -104,7 +108,6 @@ namespace McOutlineFeature
                 Debug.LogError("There is no McOutlineManager please add it then proceed work with outline feature");
                 return;
             }
-            EnableOutline();
 #if UNITY_EDITOR
             if (_Enable)
             {
@@ -122,10 +125,11 @@ namespace McOutlineFeature
         private void OnValidate()
         {
 #if UNITY_EDITOR
-            if (MC_OutlineManager.Instance == null)
+            if(OutputOutlineMaterialsProperties == null)
             {
                 return;
             }
+            OutputOutlineMaterialsProperties.Clear();
             UpdateProperties();
 
             if(_Enable)
@@ -141,15 +145,27 @@ namespace McOutlineFeature
 
         private void OnEnable()
         {
-            _ReinitializeDelegate += InitializeAndRegisterObject;
+#if UNITY_EDITOR
+
+            _InitializeAndRegisterObjectsDelegate += InitializeAndRegisterObject;
+            _DeinitializeAndUnregisterObjectsDelegate += DeinitializeAndUnregisterObject;
+            MC_OutlineManager.InitializeObjectsDelegate += InitializeAndRegisterObject;
+            MC_OutlineManager.DeinitializeObjectsDelegate += DeinitializeAndUnregisterObject;
+#endif
             InitializeAndRegisterObject();
         }
 
         private void OnDisable()
         {
-            _ReinitializeDelegate -= InitializeAndRegisterObject;
+#if UNITY_EDITOR
+            _InitializeAndRegisterObjectsDelegate -= InitializeAndRegisterObject;
+            _DeinitializeAndUnregisterObjectsDelegate -= DeinitializeAndUnregisterObject;
+            MC_OutlineManager.InitializeObjectsDelegate -= InitializeAndRegisterObject;
+            MC_OutlineManager.DeinitializeObjectsDelegate -= DeinitializeAndUnregisterObject;
+#endif
             DeinitializeAndUnregisterObject();
         }
+
         #endregion Unity Methods
 
         #region Private Variables
@@ -188,13 +204,13 @@ namespace McOutlineFeature
         {
             if (!_AdvancedSettings)
             {
-                UpdateMaterialSimpleWay();
+                UpdateMaterialFromObjectMaterials();
                 return;
             }
-            UpdateMaterialAdvancedWay();
+            UpdateMaterialManually();
         }
 
-        private void UpdateMaterialSimpleWay()
+        private void UpdateMaterialFromObjectMaterials()
         {
             if (_CurrentMeshRenderer == null)
             {
@@ -214,7 +230,7 @@ namespace McOutlineFeature
             }
         }
 
-        private void UpdateMaterialAdvancedWay()
+        private void UpdateMaterialManually()
         {
             if (_CurrentMeshRenderer == null)
             {
@@ -241,7 +257,7 @@ namespace McOutlineFeature
 
         private void InitializeAndRegisterObject()
         {
-            if (MC_OutlineManager.Instance == null || !this.enabled)
+            if (MC_OutlineManager.Instance == null)
             {
                 return;
             }
@@ -258,31 +274,14 @@ namespace McOutlineFeature
             MC_OutlineManager.Instance.Unregister(this);
             Deinitialize();
         }
-
+#if UNITY_EDITOR
         [UnityEditor.Callbacks.DidReloadScripts]
         private static void OnScriptsReloaded()
         {
-#if UNITY_EDITOR
-            _ReinitializeDelegate?.Invoke();
-#endif
+            _DeinitializeAndUnregisterObjectsDelegate?.Invoke();
+            _InitializeAndRegisterObjectsDelegate?.Invoke();
         }
-
-        public void OnBeforeSerialize()
-        {
-#if UNITY_EDITOR
-            if (this.enabled)
-            {
-                InitializeAndRegisterObject();
-            }
 #endif
-        }
-
-        public void OnAfterDeserialize()
-        {
-#if UNITY_EDITOR
-            DeinitializeAndUnregisterObject();
-#endif
-        }
 
         #endregion Private Methods
     }

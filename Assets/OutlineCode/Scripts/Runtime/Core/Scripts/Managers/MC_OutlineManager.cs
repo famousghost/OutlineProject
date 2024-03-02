@@ -1,5 +1,6 @@
 namespace McOutlineFeature
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using UnityEngine;
@@ -28,7 +29,8 @@ namespace McOutlineFeature
                 OutlineObjects.Remove(outline);
             }
         }
-        #endregion Public Methods
+
+#endregion Public Methods
 
         #region Public Variables
         public List<MC_OutlineObject> OutlineObjects = new List<MC_OutlineObject>();
@@ -39,15 +41,34 @@ namespace McOutlineFeature
         }
 
         public static MC_OutlineManager Instance;
+        public static Action InitializeObjectsDelegate;
+        public static Action DeinitializeObjectsDelegate;
         #endregion Public Variables
 
         #region Unity Methods
         private void Awake()
         {
+            OutlineObjects.Clear();
             Instance = this;
-            int x = 0;
         }
 
+        private void OnEnable()
+        {
+            OutlineObjects.Clear();
+            Instance = this;
+#if UNITY_EDITOR
+            InitializeObjectsDelegate?.Invoke();
+#endif
+        }
+
+        private void OnDisable()
+        {
+            OutlineObjects.Clear();
+            Instance = null;
+#if UNITY_EDITOR
+            DeinitializeObjectsDelegate?.Invoke();
+#endif
+        }
         private void OnValidate()
         {
 #if UNITY_EDITOR

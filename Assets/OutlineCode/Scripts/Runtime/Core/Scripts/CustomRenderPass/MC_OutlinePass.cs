@@ -8,26 +8,8 @@ namespace McOutlineFeature
     [ExecuteAlways]
     public sealed class MC_OutlineCustomPass : CustomPass
     {
-        [SerializeField, HideInInspector]
-        private Shader _StencilBufferShader;
 
-        [SerializeField, HideInInspector]
-        private Shader _OutlineShader;
-        
-
-        private Material _OutlineStencilBufferMaterial;
-        private Material _OutlineMaterial;
-
-        private MaterialPropertyBlock _OutlineMaterialPropertyBlock;
-
-        //Shaders properties
-        private static readonly int _AlphaCutoffEnableId = Shader.PropertyToID("_AlphaCutoffEnable");
-        private static readonly int _LeafTextureId = Shader.PropertyToID("_LeafTexture");
-        private static readonly int _AlphaCutoffId = Shader.PropertyToID("_AlphaCutoff");
-        private static readonly int _TilingId = Shader.PropertyToID("_Tiling");
-        private static readonly int _OutlineSizeId = Shader.PropertyToID("_OutlineSize");
-        private static readonly int _OutlineColorId = Shader.PropertyToID("_OutlineColor");
-
+        #region Unity Methods
         protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
         {
             if(MC_OutlineManager.Instance == null)
@@ -54,13 +36,11 @@ namespace McOutlineFeature
 
             if (MC_OutlineManager.Instance == null)
             {
-
                 return;
             }
             var outlineObjects = MC_OutlineManager.Instance.OutlineObjects;
             if (outlineObjects.Count != 0)
             {
-
                 foreach (var outlineObject in outlineObjects)
                 {
                     if(!outlineObject.OutlineActive)
@@ -69,6 +49,10 @@ namespace McOutlineFeature
                     }
                     var outlineRenderer = outlineObject.Renderer;
 
+                    if(outlineRenderer == null)
+                    {
+                        continue;
+                    }
 
                     for (int i = 0; i < outlineRenderer.sharedMaterials.Length; ++i)
                     {
@@ -102,5 +86,26 @@ namespace McOutlineFeature
         {
             // Cleanup code
         }
+        #endregion Unity Methods
+
+        #region Private Variables
+
+        private Shader _StencilBufferShader;
+        private Shader _OutlineShader;
+
+        private Material _OutlineStencilBufferMaterial;
+        private Material _OutlineMaterial;
+
+        private MaterialPropertyBlock _OutlineMaterialPropertyBlock;
+
+        //Shaders properties
+        private static readonly int _AlphaCutoffEnableId = Shader.PropertyToID("_AlphaCutoffEnable");
+        private static readonly int _LeafTextureId = Shader.PropertyToID("_LeafTexture");
+        private static readonly int _AlphaCutoffId = Shader.PropertyToID("_AlphaCutoff");
+        private static readonly int _TilingId = Shader.PropertyToID("_Tiling");
+        private static readonly int _OutlineSizeId = Shader.PropertyToID("_OutlineSize");
+        private static readonly int _OutlineColorId = Shader.PropertyToID("_OutlineColor");
+
+        #endregion Private Variables
     }
 }

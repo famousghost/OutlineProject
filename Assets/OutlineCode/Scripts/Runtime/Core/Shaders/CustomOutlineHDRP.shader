@@ -126,7 +126,7 @@ CBUFFER_END
                 ZERO_INITIALIZE(SurfaceData, surfaceData);
                 builtinData.opacity = 1.0f;
                 builtinData.emissiveColor = float3(0, 0, 0);
-                surfaceData.color = _OutlineColor;
+                surfaceData.color = _OutlineColor.rgb;
             }
 
             #include "Packages/com.unity.render-pipelines.high-definition/Runtime/RenderPipeline/ShaderPass/ShaderPassForwardUnlit.hlsl"
