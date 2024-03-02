@@ -201,9 +201,9 @@ namespace McOutlineFeature
             {
                 return;
             }
-            for (int i = 0; i < _CurrentMeshRenderer.materials.Length; ++i)
+            for (int i = 0; i < _CurrentMeshRenderer.sharedMaterials.Length; ++i)
             {
-                var currentMaterial = _CurrentMeshRenderer.materials[i];
+                var currentMaterial = _CurrentMeshRenderer.sharedMaterials[i];
                 _OutputOutlineMaterialsProperties.Add(new OutputOutlineMaterialProperties(currentMaterial.GetFloat(_AlphaCutoffId),
                                                                                           currentMaterial.GetFloat(_AlphaCutoffEnableId),
                                                                                           currentMaterial.GetTextureScale(_BaseColorMapId),
@@ -218,8 +218,12 @@ namespace McOutlineFeature
                 return;
             }
 
-            for (int i = 0; i < _CurrentMeshRenderer.materials.Length; ++i)
+            for (int i = 0; i < _CurrentMeshRenderer.sharedMaterials.Length; ++i)
             {
+                if(_OutlinePropertiesList.Count != _CurrentMeshRenderer.sharedMaterials.Length)
+                {
+                    return;
+                }
                 var outlinePropertiesElement = _OutlinePropertiesList[i];
 
                 _OutputOutlineMaterialsProperties.Add(new OutputOutlineMaterialProperties(outlinePropertiesElement.AlphaCutoffProperties,

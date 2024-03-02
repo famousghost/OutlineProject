@@ -71,6 +71,10 @@ namespace McOutlineFeature
 
                     for (int i = 0; i < outlineRenderer.materials.Length; ++i)
                     {
+                        if(outlineObject.OutputOutlineMaterialsProperties.Count != outlineRenderer.materials.Length)
+                        {
+                            break;
+                        }
                         var outlinePropertiesElement = outlineObject.OutputOutlineMaterialsProperties[i];
                         _OutlineMaterialPropertyBlock.SetFloat(_OutlineSizeId, outlineObject.OutlineSize);
                         _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffId, outlinePropertiesElement.AlphaCutoff);
