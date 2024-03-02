@@ -29,6 +29,10 @@ namespace McOutlineFeature
 
         protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
         {
+            if(McOutlineManager.Instance == null)
+            {
+                return;
+            }
             _StencilBufferShader = McOutlineManager.Instance.Settings.StencilBufferShader;
             _OutlineShader = McOutlineManager.Instance.Settings.OutlineShader;
 
@@ -40,22 +44,22 @@ namespace McOutlineFeature
 
         protected override void Execute(CustomPassContext ctx)
         {
-            _OutlineStencilBufferMaterial.SetInt("_StencilWriteMask", (int)UserStencilUsage.UserBit0);
-
-            RenderObjectsMy(ctx.cmd, _OutlineStencilBufferMaterial);
-
-            RenderObjectsMy(ctx.cmd, _OutlineMaterial);
+            RenderObjects(ctx.cmd, _OutlineStencilBufferMaterial);
+            RenderObjects(ctx.cmd, _OutlineMaterial);
         }
 
-        private void RenderObjectsMy(CommandBuffer cmd, Material renderMaterial)
+        private void RenderObjects(CommandBuffer cmd, Material renderMaterial)
         {
-            if(McOutlineManager.Instance == null)
+
+            if (McOutlineManager.Instance == null)
             {
+
                 return;
             }
             var outlineObjects = McOutlineManager.Instance.OutlineObjects;
             if (outlineObjects.Count != 0)
             {
+
                 foreach (var outlineObject in outlineObjects)
                 {
                     if(!outlineObject.OutlineActive)
@@ -82,7 +86,6 @@ namespace McOutlineFeature
                         _OutlineMaterialPropertyBlock.SetVector(_TilingId, outlineObject.Tiling[i]);
 
                         outlineRenderer.SetPropertyBlock(_OutlineMaterialPropertyBlock, i);
-
                         cmd.DrawRenderer(outlineRenderer, renderMaterial, i);
                     }
                 }

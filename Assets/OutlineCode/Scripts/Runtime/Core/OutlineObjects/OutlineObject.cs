@@ -61,6 +61,7 @@ namespace McOutlineFeature
                 Debug.LogError("There is no McOutlineManager please add it then proceed work with outline feature");
                 return;
             }
+            EnableOutline();
 #if UNITY_EDITOR
             if (_Enable)
             {
@@ -75,12 +76,6 @@ namespace McOutlineFeature
             McOutlineManager.Instance.Register(this);
             Initialize();
         }
-
-        private void Update()
-        {
-
-        }
-
 
         private void OnValidate()
         {
@@ -110,7 +105,6 @@ namespace McOutlineFeature
                 return;
             }
             McOutlineManager.Instance.Register(this);
-            Deinitialize();
             Initialize();
         }
 
