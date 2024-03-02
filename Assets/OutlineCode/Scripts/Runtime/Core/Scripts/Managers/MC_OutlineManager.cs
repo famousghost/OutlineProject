@@ -50,6 +50,7 @@ namespace McOutlineFeature
         private void OnValidate()
         {
 #if UNITY_EDITOR
+            OutlineObjects.Clear();
             Instance = this;
 #endif
         }

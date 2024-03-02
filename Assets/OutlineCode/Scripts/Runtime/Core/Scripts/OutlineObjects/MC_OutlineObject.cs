@@ -2,6 +2,7 @@ namespace McOutlineFeature
 {
     using System;
     using System.Collections.Generic;
+    using UnityEditor;
     using UnityEngine;
 
     [Serializable]
@@ -45,7 +46,7 @@ namespace McOutlineFeature
     }
 
     [ExecuteAlways]
-    public sealed class MC_OutlineObject : MonoBehaviour
+    public sealed class MC_OutlineObject : MonoBehaviour, ISerializationCallbackReceiver
     {
         #region Inspector Variables
         [Header("Simple Outline Settings")]
@@ -77,6 +78,8 @@ namespace McOutlineFeature
         public List<OutputOutlineMaterialProperties> OutputOutlineMaterialsProperties => _OutputOutlineMaterialsProperties;
 
         public bool OutlineActive => _OutlineActive;
+
+        public static Action _ReinitializeDelegate;
 
         #endregion Public Variables
 
@@ -132,28 +135,20 @@ namespace McOutlineFeature
             else
             {
                 DisableOutline();
-            }    
+            }
 #endif
         }
 
         private void OnEnable()
         {
-            if (MC_OutlineManager.Instance == null)
-            {
-                return;
-            }
-            MC_OutlineManager.Instance.Register(this);
-            Initialize();
+            _ReinitializeDelegate += Reinitialize;
+            InitializeAndRegisterObject();
         }
 
         private void OnDisable()
         {
-            if (MC_OutlineManager.Instance == null)
-            {
-                return;
-            }
-            MC_OutlineManager.Instance.Unregister(this);
-            Deinitialize();
+            _ReinitializeDelegate -= Reinitialize;
+            DeinitializeAndUnregisterObject();
         }
         #endregion Unity Methods
 
@@ -242,6 +237,47 @@ namespace McOutlineFeature
                                                                                           outlinePropertiesElement.TilingProperties,
                                                                                           outlinePropertiesElement.AlphaTextureProperties));
             }
+        }
+
+        private void Reinitialize()
+        {
+            InitializeAndRegisterObject();
+        }
+
+        private void InitializeAndRegisterObject()
+        {
+            if (MC_OutlineManager.Instance == null)
+            {
+                return;
+            }
+            MC_OutlineManager.Instance.Register(this);
+            Initialize();
+        }
+
+        private void DeinitializeAndUnregisterObject()
+        {
+            if (MC_OutlineManager.Instance == null)
+            {
+                return;
+            }
+            MC_OutlineManager.Instance.Unregister(this);
+            Deinitialize();
+        }
+
+        [UnityEditor.Callbacks.DidReloadScripts]
+        private static void OnScriptsReloaded()
+        {
+            _ReinitializeDelegate?.Invoke();
+        }
+
+        public void OnBeforeSerialize()
+        {
+            InitializeAndRegisterObject();
+        }
+
+        public void OnAfterDeserialize()
+        {
+            DeinitializeAndUnregisterObject();
         }
 
         #endregion Private Methods
