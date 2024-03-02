@@ -45,6 +45,7 @@ namespace McOutlineFeature
         private void Awake()
         {
             Instance = this;
+            int x = 0;
         }
 
         private void OnValidate()
