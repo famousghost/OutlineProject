@@ -141,13 +141,13 @@ namespace McOutlineFeature
 
         private void OnEnable()
         {
-            _ReinitializeDelegate += Reinitialize;
+            _ReinitializeDelegate += InitializeAndRegisterObject;
             InitializeAndRegisterObject();
         }
 
         private void OnDisable()
         {
-            _ReinitializeDelegate -= Reinitialize;
+            _ReinitializeDelegate -= InitializeAndRegisterObject;
             DeinitializeAndUnregisterObject();
         }
         #endregion Unity Methods
@@ -239,14 +239,9 @@ namespace McOutlineFeature
             }
         }
 
-        private void Reinitialize()
-        {
-            InitializeAndRegisterObject();
-        }
-
         private void InitializeAndRegisterObject()
         {
-            if (MC_OutlineManager.Instance == null)
+            if (MC_OutlineManager.Instance == null || !this.enabled)
             {
                 return;
             }
@@ -267,17 +262,26 @@ namespace McOutlineFeature
         [UnityEditor.Callbacks.DidReloadScripts]
         private static void OnScriptsReloaded()
         {
+#if UNITY_EDITOR
             _ReinitializeDelegate?.Invoke();
+#endif
         }
 
         public void OnBeforeSerialize()
         {
-            InitializeAndRegisterObject();
+#if UNITY_EDITOR
+            if (this.enabled)
+            {
+                InitializeAndRegisterObject();
+            }
+#endif
         }
 
         public void OnAfterDeserialize()
         {
+#if UNITY_EDITOR
             DeinitializeAndUnregisterObject();
+#endif
         }
 
         #endregion Private Methods
