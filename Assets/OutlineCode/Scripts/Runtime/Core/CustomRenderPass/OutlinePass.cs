@@ -74,7 +74,7 @@ namespace McOutlineFeature
                     for (int i = 0; i < outlineRenderer.materials.Length; ++i)
                     {
                         _OutlineMaterialPropertyBlock.SetFloat(_OutlineSizeId, outlineObject.OutlineSize);
-                        _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffId, outlineObject.AlphaCutoff);
+                        _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffId, outlineObject.AlphaCutoff[i]);
                         _OutlineMaterialPropertyBlock.SetFloat(_AlphaCutoffEnableId, outlineObject.AlphaCutoffEnable[i]);
                         _OutlineMaterialPropertyBlock.SetColor(_OutlineColorId, outlineObject.OutlineColor);
                         if (outlineObject.AlphaTextureToAlphaCutoff[i] == null)

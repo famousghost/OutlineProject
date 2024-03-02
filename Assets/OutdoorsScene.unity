@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2262.0686, g: 2403.5315, b: 3501.0396, a: 1}
+  m_IndirectSpecularColor: {r: 2263.174, g: 2404.555, b: 3502.0083, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -497,7 +497,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 807382039}
     m_Modifications:
     - target: {fileID: 1639987689182440, guid: 4c001ec3cbfef9446a573fe16815e9af, type: 3}
       propertyPath: m_Name
@@ -521,7 +521,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4867528393344068, guid: 4c001ec3cbfef9446a573fe16815e9af, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.17
+      value: -0.120000005
       objectReference: {fileID: 0}
     - target: {fileID: 4867528393344068, guid: 4c001ec3cbfef9446a573fe16815e9af, type: 3}
       propertyPath: m_LocalPosition.z
@@ -533,15 +533,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4867528393344068, guid: 4c001ec3cbfef9446a573fe16815e9af, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4867528393344068, guid: 4c001ec3cbfef9446a573fe16815e9af, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4867528393344068, guid: 4c001ec3cbfef9446a573fe16815e9af, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4867528393344068, guid: 4c001ec3cbfef9446a573fe16815e9af, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -582,11 +582,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09bea7b734f3e7a4b8f1fdddd778ac4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _UseDefaultSettings: 0
   _OutlineSize: 15
   _OutlineColor: {r: 0, g: 1, b: 0, a: 0}
+  _AdvancedSettings: 1
+  _AlphaCutoffProperties:
+  - 0.5
+  _AlphaCuoffEnableProperties: 01
+  _TilingProperties:
+  - {x: 1, y: 1}
+  _AlphaTextureToAlphaCutoffProperties:
+  - {fileID: 2800000, guid: 08060bf4d821c1645a56abe8468767ce, type: 3}
   _Enable: 1
   _AlphaTextureToAlphaCutoff: []
+--- !u!4 &596460830 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4867528393344068, guid: 4c001ec3cbfef9446a573fe16815e9af,
+    type: 3}
+  m_PrefabInstance: {fileID: 596460824}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &717814492
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,6 +662,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4339897503184016}
+  - {fileID: 596460830}
   m_Father: {fileID: 356415509}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1537944911
@@ -1245,9 +1259,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09bea7b734f3e7a4b8f1fdddd778ac4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _UseDefaultSettings: 0
   _OutlineSize: 15
   _OutlineColor: {r: 0, g: 1, b: 0, a: 0}
+  _AdvancedSettings: 0
+  _AlphaCutoffProperties: []
+  _AlphaCuoffEnableProperties: 
+  _TilingProperties: []
+  _AlphaTextureToAlphaCutoffProperties: []
   _Enable: 1
   _AlphaTextureToAlphaCutoff: []
 --- !u!1660057539 &9223372036854775807
@@ -1261,4 +1279,3 @@ SceneRoots:
   - {fileID: 356415509}
   - {fileID: 1800733862}
   - {fileID: 717814493}
-  - {fileID: 596460824}

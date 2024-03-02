@@ -1,18 +1,26 @@
 namespace McOutlineFeature
 {
     using System.Collections.Generic;
+    using Unity.VisualScripting;
     using UnityEngine;
 
     public sealed class OutlineObject : MonoBehaviour
     {
         #region Inspector Variables
-        [Header("Outline Properties")]
-        [SerializeField] private bool _UseDefaultSettings;
-        [SerializeField] private float _OutlineSize;
-        [SerializeField] private Color _OutlineColor;
+        [Header("Simple Outline Settings")]
+        [Tooltip("Outline size value"), SerializeField] private float _OutlineSize;
+        [Tooltip("Outline color value"), SerializeField] private Color _OutlineColor;
+
+        [Header("Advanced Outline Settings")]
+        [Tooltip("Activate advanced settings\nthis checkbox activates that alpha cutoff properties can be set by developer"), SerializeField] private bool _AdvancedSettings = false;
+
+        [Tooltip("AlphaCutoff\n if _AdvancedSettings is false then takes values from current material\nList size must match amount of materials inside MeshRenderer"), SerializeField, Range(0.0f, 1.0f)] private List<float> _AlphaCutoffProperties;
+        [Tooltip("Activate/Deactivate alpha cutoff feature\n if _AdvancedSettings is false then takes values from current material\nList size must match amount of materials inside MeshRenderer"), SerializeField] private List<bool> _AlphaCuoffEnableProperties;
+        [Tooltip("Setup tiling for texture\n if _AdvancedSettings is false then takes values from current materials\nList size must match amount of materials inside MeshRenderer"), SerializeField] private List<Vector2> _TilingProperties;
+        [Tooltip("Setup Alpha Texture\n if _AdvancedSettings is false then takes values from current materials\nList size must match amount of materials inside MeshRenderer"), SerializeField] private List<Texture> _AlphaTextureToAlphaCutoffProperties;
 
         [Header("Debug")]
-        [SerializeField] private bool _Enable = true;
+        [Tooltip("Only debug purpose to show enable/disable feature for object"), SerializeField] private bool _Enable = true;
         #endregion Inspector Variables
 
         #region Public Variables
@@ -21,7 +29,7 @@ namespace McOutlineFeature
         public float OutlineSize => _OutlineSize;
         public Color OutlineColor => _OutlineColor;
 
-        public float AlphaCutoff => _AlphaCutoff;
+        public List<float> AlphaCutoff => _AlphaCutoff;
         public List<float> AlphaCutoffEnable => _AlphaCutoffEnable;
 
         public List<Texture> AlphaTextureToAlphaCutoff => _AlphaTextureToAlphaCutoff;
@@ -48,8 +56,12 @@ namespace McOutlineFeature
 
         private void Start()
         {
+            if (McOutlineManager.Instance == null)
+            {
+                Debug.LogError("There is no McOutlineManager please add it then proceed work with outline feature");
+                return;
+            }
 #if UNITY_EDITOR
-            UpdateMaterialsProperties();
             if (_Enable)
             {
                 EnableOutline();
@@ -59,39 +71,27 @@ namespace McOutlineFeature
                 DisableOutline();
             }
 #endif
-            if (McOutlineManager.Instance != null)
-            {
-                McOutlineManager.Instance.Register(this);
-            }
-            if (_UseDefaultSettings)
-            {
-                if (McOutlineManager.Instance = null)
-                {
-                    Debug.Log("There is no instance of object McOutlineManager");
-                    return;
-                }
-                _OutlineSize = McOutlineManager.Instance.Settings.DefaultOutlineSize;
-                _OutlineColor = McOutlineManager.Instance.Settings.DefaultOutlineColor;
-            }
-            Deinitialize();
+            _CurrentMeshRenderer = GetComponent<MeshRenderer>();
+            McOutlineManager.Instance.Register(this);
             Initialize();
+        }
+
+        private void Update()
+        {
+
         }
 
 
         private void OnValidate()
         {
+#if UNITY_EDITOR
             if (McOutlineManager.Instance == null)
             {
                 return;
             }
-            if (_UseDefaultSettings)
-            {
-                _OutlineSize = McOutlineManager.Instance.Settings.DefaultOutlineSize;
-                _OutlineColor = McOutlineManager.Instance.Settings.DefaultOutlineColor;
-            }
-#if UNITY_EDITOR
+
             Deinitialize();
-            UpdateMaterialsProperties();
+            UpdateProperties();
             if(_Enable)
             {
                 EnableOutline();
@@ -105,21 +105,22 @@ namespace McOutlineFeature
 
         private void OnEnable()
         {
-            if (McOutlineManager.Instance != null)
+            if (McOutlineManager.Instance == null)
             {
-                McOutlineManager.Instance.Register(this);
+                return;
             }
+            McOutlineManager.Instance.Register(this);
             Deinitialize();
             Initialize();
         }
 
         private void OnDisable()
         {
-            if (McOutlineManager.Instance != null)
+            if (McOutlineManager.Instance == null)
             {
-                McOutlineManager.Instance.Unregister(this);
+                return;
             }
-
+            McOutlineManager.Instance.Unregister(this);
             Deinitialize();
         }
         #endregion Unity Methods
@@ -131,14 +132,11 @@ namespace McOutlineFeature
         private static readonly int _BaseColorMapId = Shader.PropertyToID("_BaseColorMap");
         
         //Properties from materials
-        private float _AlphaCutoff;
-        private List<float> _AlphaCutoffEnable = new List<float>();
-        [SerializeField] private List<Texture> _AlphaTextureToAlphaCutoff = new List<Texture>();
-        private List<Vector2> _Tiling = new List<Vector2>();
+        private List<float> _AlphaCutoff;
+        private List<float> _AlphaCutoffEnable;
+        [SerializeField] private List<Texture> _AlphaTextureToAlphaCutoff;
+        private List<Vector2> _Tiling;
         private bool _OutlineActive;
-
-        private Shader _StencilBufferShader;
-        private Shader _OutlineShader;
 
         private MeshRenderer _CurrentMeshRenderer;
         #endregion Private Variables
@@ -147,53 +145,33 @@ namespace McOutlineFeature
 
         private void Initialize()
         {
-            _CurrentMeshRenderer = GetComponent<MeshRenderer>();
-            CreateShaders();
-            if (_StencilBufferShader == null)
-            {
-                Debug.LogError("There is no Stencil buffer shader in project");
-                return;
-            }
-            if (_OutlineShader == null)
-            {
-                Debug.LogError("There is no Outline shader in project");
-                return;
-            }
-
-            CreateMaterials();
-            UpdateMaterialsProperties();
+            _AlphaCutoff = new List<float>();
+            _AlphaCutoffEnable = new List<float>();
+            _AlphaTextureToAlphaCutoff = new List<Texture>();
+            _Tiling = new List<Vector2>();
+            UpdateProperties();
         }
 
         private void Deinitialize()
         {
+            _AlphaCutoff.Clear();
             _Tiling.Clear();
             _AlphaTextureToAlphaCutoff.Clear();
             _AlphaCutoffEnable.Clear();
         }
 
-        private void CreateShaders()
+
+        private void UpdateProperties()
         {
-            if(McOutlineManager.Instance == null)
+            if (!_AdvancedSettings)
             {
+                UpdateMaterialSimpleWay();
                 return;
             }
-            _OutlineShader = McOutlineManager.Instance.Settings.OutlineShader;
-            _StencilBufferShader = McOutlineManager.Instance.Settings.StencilBufferShader;
+            UpdateMaterialAdvancedWay();
         }
 
-        private void CreateMaterials()
-        {
-            var materials = _CurrentMeshRenderer.materials;
-            for (int i = 0; i < materials.Length; ++i)
-            {
-
-                _AlphaCutoff = materials[i].GetFloat(_AlphaCutoffId);
-                _Tiling.Add(materials[i].GetTextureScale(_BaseColorMapId));
-            }
-
-        }
-
-        private void UpdateMaterialsProperties()
+        private void UpdateMaterialSimpleWay()
         {
             if (_CurrentMeshRenderer == null)
             {
@@ -202,10 +180,26 @@ namespace McOutlineFeature
             for (int i = 0; i < _CurrentMeshRenderer.materials.Length; ++i)
             {
                 var currentMaterial = _CurrentMeshRenderer.materials[i];
-                _AlphaCutoff = currentMaterial.GetFloat(_AlphaCutoffId);
+                _AlphaCutoff.Add(currentMaterial.GetFloat(_AlphaCutoffId));
                 _Tiling.Add(currentMaterial.GetTextureScale(_BaseColorMapId));
                 _AlphaTextureToAlphaCutoff.Add(currentMaterial.GetTexture(_BaseColorMapId));
                 _AlphaCutoffEnable.Add(currentMaterial.GetFloat(_AlphaCutoffEnableId));
+            }
+        }
+
+        private void UpdateMaterialAdvancedWay()
+        {
+            if (_CurrentMeshRenderer == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < _CurrentMeshRenderer.materials.Length; ++i)
+            {
+                _AlphaCutoff.Add(_AlphaCutoffProperties[i]);
+                _Tiling.Add(_TilingProperties[i]);
+                _AlphaTextureToAlphaCutoff.Add(_AlphaTextureToAlphaCutoffProperties[i]);
+                _AlphaCutoffEnable.Add(_AlphaCuoffEnableProperties[i] ? 1.0f : 0.0f);
             }
         }
 

@@ -43,7 +43,6 @@ namespace McOutlineFeature
         private void Awake()
         {
             Instance = this;
-            Debug.Log("Manager Awake");
         }
         #endregion Unity Methods
     }
