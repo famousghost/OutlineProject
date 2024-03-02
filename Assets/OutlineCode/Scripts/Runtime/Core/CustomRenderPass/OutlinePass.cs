@@ -29,14 +29,8 @@ namespace McOutlineFeature
 
         protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
         {
-            if (_StencilBufferShader == null)
-            {
-                _StencilBufferShader = McOutlineManager.Instance.Settings.StencilBufferShader;
-            }
-            if(_OutlineShader == null)
-            {
-                _OutlineShader = McOutlineManager.Instance.Settings.OutlineShader;
-            }
+            _StencilBufferShader = McOutlineManager.Instance.Settings.StencilBufferShader;
+            _OutlineShader = McOutlineManager.Instance.Settings.OutlineShader;
 
             _OutlineMaterialPropertyBlock = new MaterialPropertyBlock();
 

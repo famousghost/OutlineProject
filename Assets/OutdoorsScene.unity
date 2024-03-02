@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 2263.174, g: 2404.555, b: 3502.0083, a: 1}
+  m_IndirectSpecularColor: {r: 2263.172, g: 2404.555, b: 3502.067, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -472,7 +472,7 @@ MonoBehaviour:
         clearFlags: 0
         passFoldout: 0
         m_Version: 0
-        _StencilBufferShader: {fileID: 4800000, guid: 00acb77ea50028c428fddf573a4d3f21,
+        _StencilBufferShader: {fileID: 4800000, guid: aaf82ecf508e9d24b85766b73f47ce3c,
           type: 3}
         _OutlineShader: {fileID: 4800000, guid: f33a27c215ad09041ba4358ac94acdbf,
           type: 3}

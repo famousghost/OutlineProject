@@ -22,12 +22,12 @@ Shader "McOutline/CustomStencillBuffer"
             ZTest Always
             Cull Off
 
-             Stencil
-             {
-                 Ref 15
-                 Comp Always
-                 Pass Replace
-             }    
+            Stencil
+            {
+                Ref 15
+                Comp Always
+                Pass Replace
+            }    
 
             CGPROGRAM
             #pragma vertex vert

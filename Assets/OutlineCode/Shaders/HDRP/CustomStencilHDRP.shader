@@ -32,11 +32,20 @@ Shader "Renderers/CustomStencilHDRP"
             Name "FirstPass"
             Tags { "LightMode" = "FirstPass" }
 
+            ColorMask 0
             Blend Off
             ZWrite Off
             ZTest Always
 
             Cull Off
+
+
+            Stencil
+            {
+                Ref 15
+                Comp Always
+                Pass Replace
+            }
 
             HLSLPROGRAM
 
@@ -62,16 +71,17 @@ Shader "Renderers/CustomStencilHDRP"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
             
             TEXTURE2D(_ColorMap);
+            TEXTURE2D(_LeafTexture);
 
             // Declare properties in the UnityPerMaterial cbuffer to make the shader compatible with SRP Batcher.
 CBUFFER_START(UnityPerMaterial)
             float4 _ColorMap_ST;
+            float4 _LeafTexture_ST;
             float4 _Color;
+            SamplerState sampler_linear_repeat;
 
             float _AlphaCutoff;
             float _BlendMode;
-
-            sampler2D _LeafTexture;
 
             float4 _OutlineColor;
             float2 _Tiling;
@@ -83,16 +93,19 @@ CBUFFER_END
 
             // If you need to modify the vertex datas, you can uncomment this code
             // Note: all the transformations here are done in object space
-            #define HAVE_MESH_MODIFICATION
-            AttributesMesh ApplyMeshModification(AttributesMesh input, float3 timeParameters)
-            {
-                input.positionOS += input.normalOS * 0.0001;
-                return input;
-            }
+            //#define HAVE_MESH_MODIFICATION
+            //AttributesMesh ApplyMeshModification(AttributesMesh input, float3 timeParameters)
+            //{
+            //    input.positionOS += input.normalOS * 0.0001;
+            //    return input;
+            //}
 
             // Put the code to render the objects in your custom pass in this function
             void GetSurfaceAndBuiltinData(FragInputs fragInputs, float3 viewDirection, inout PositionInputs posInput, out SurfaceData surfaceData, out BuiltinData builtinData)
             {
+                float2 leafTextureUv = TRANSFORM_TEX(fragInputs.texCoord0.xy, _LeafTexture);
+                const float opacity = SAMPLE_TEXTURE2D(_LeafTexture, sampler_linear_repeat, leafTextureUv * _Tiling).a;
+
 #ifdef _ALPHATEST_ON
                 DoAlphaTest(opacity, _AlphaCutoff);
 #endif
@@ -100,7 +113,7 @@ CBUFFER_END
                 // Write back the data to the output structures
                 ZERO_BUILTIN_INITIALIZE(builtinData); // No call to InitBuiltinData as we don't have any lighting
                 ZERO_INITIALIZE(SurfaceData, surfaceData);
-                builtinData.opacity = 0.0f;
+                builtinData.opacity = 1.0f;
                 builtinData.emissiveColor = float3(0, 0, 0);
                 surfaceData.color = _OutlineColor;
             }

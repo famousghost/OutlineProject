@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _DefaultOutlineSize: 15
   _DefaultOutlineColor: {r: 0, g: 1, b: 0, a: 0}
-  _StencilBufferShader: {fileID: 4800000, guid: 00acb77ea50028c428fddf573a4d3f21,
+  _StencilBufferShader: {fileID: 4800000, guid: aaf82ecf508e9d24b85766b73f47ce3c,
     type: 3}
   _OutlineShader: {fileID: 4800000, guid: f33a27c215ad09041ba4358ac94acdbf, type: 3}

@@ -67,16 +67,18 @@ Shader "Renderers/CustomOutlineHDRP"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Common.hlsl"
             
             TEXTURE2D(_ColorMap);
+            TEXTURE2D(_LeafTexture);
 
             // Declare properties in the UnityPerMaterial cbuffer to make the shader compatible with SRP Batcher.
 CBUFFER_START(UnityPerMaterial)
             float4 _ColorMap_ST;
+            float4 _LeafTexture_ST;
             float4 _Color;
 
             float _AlphaCutoff;
             float _BlendMode;
 
-            sampler2D _LeafTexture;
+
 
             float4 _OutlineColor;
             float2 _Tiling;
