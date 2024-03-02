@@ -1,10 +1,10 @@
-namespace McOutlineFeature
+namespace McOutline
 {
     using System.Collections.Generic;
     using UnityEngine;
 
     [ExecuteAlways, ImageEffectAllowedInSceneView]
-    public sealed class MCOutline : MonoBehaviour
+    public sealed class MC_OutlineUnlit : MonoBehaviour
     {
         #region Inspector Variables
         [Header("Outline Properties")]

@@ -48,15 +48,15 @@ MonoBehaviour:
   fadeRadius: 0
   priority: 0
   customPasses:
-  - rid: 6223894464002260992
+  - rid: 6223894468410736640
   injectionPoint: 3
   m_TargetCamera: {fileID: 0}
   useTargetCamera: 0
   references:
     version: 2
     RefIds:
-    - rid: 6223894464002260992
-      type: {class: OutlineCustomPass, ns: McOutlineFeature, asm: Assembly-CSharp}
+    - rid: 6223894468410736640
+      type: {class: MC_OutlineCustomPass, ns: McOutlineFeature, asm: Assembly-CSharp}
       data:
         m_Name: OutlineCustomPass
         enabled: 1
@@ -65,7 +65,5 @@ MonoBehaviour:
         clearFlags: 0
         passFoldout: 0
         m_Version: 0
-        _StencilBufferShader: {fileID: 4800000, guid: aaf82ecf508e9d24b85766b73f47ce3c,
-          type: 3}
-        _OutlineShader: {fileID: 4800000, guid: 5019bc37ec0c16b408f689ce53e7f2c5,
-          type: 3}
+        _StencilBufferShader: {fileID: 0}
+        _OutlineShader: {fileID: 0}
