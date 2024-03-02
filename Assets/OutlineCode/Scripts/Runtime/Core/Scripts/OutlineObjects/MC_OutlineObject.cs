@@ -44,6 +44,7 @@ namespace McOutlineFeature
         #endregion
     }
 
+    [ExecuteAlways]
     public sealed class MC_OutlineObject : MonoBehaviour
     {
         #region Inspector Variables

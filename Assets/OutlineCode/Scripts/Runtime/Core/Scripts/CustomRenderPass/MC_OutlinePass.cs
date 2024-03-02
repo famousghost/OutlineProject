@@ -5,6 +5,7 @@ namespace McOutlineFeature
     using UnityEngine.Rendering.HighDefinition;
     using UnityEngine.Rendering;
 
+    [ExecuteAlways]
     public sealed class MC_OutlineCustomPass : CustomPass
     {
         [SerializeField, HideInInspector]
@@ -69,9 +70,9 @@ namespace McOutlineFeature
                     var outlineRenderer = outlineObject.Renderer;
 
 
-                    for (int i = 0; i < outlineRenderer.materials.Length; ++i)
+                    for (int i = 0; i < outlineRenderer.sharedMaterials.Length; ++i)
                     {
-                        if(outlineObject.OutputOutlineMaterialsProperties.Count != outlineRenderer.materials.Length)
+                        if(outlineObject.OutputOutlineMaterialsProperties.Count != outlineRenderer.sharedMaterials.Length)
                         {
                             break;
                         }

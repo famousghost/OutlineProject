@@ -5,6 +5,7 @@ namespace McOutlineFeature
     using UnityEngine;
 
 
+    [ExecuteAlways]
     public sealed class MC_OutlineManager : MonoBehaviour
     {
         #region Inspector Variables
