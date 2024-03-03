@@ -8,14 +8,24 @@ namespace McOutlineFeatureTest
 
         #region Unity Methods
 
-        private void OnMouseDown()
+        private void OnMouseEnter()
         {
             var outlineComponent = GetComponent<MC_OutlineObject>();
-            if(outlineComponent == null)
+            if (outlineComponent == null)
             {
                 return;
             }
             outlineComponent.EnableOutline();
+        }
+
+        private void OnMouseExit()
+        {
+            var outlineComponent = GetComponent<MC_OutlineObject>();
+            if (outlineComponent == null)
+            {
+                return;
+            }
+            outlineComponent.DisableOutline();
         }
 
         #endregion Unity Methods

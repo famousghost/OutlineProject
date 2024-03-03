@@ -109,7 +109,7 @@ namespace McOutlineFeature
                 return;
             }
 #if UNITY_EDITOR
-            if (_Enable)
+            if (_Enable && !Application.isPlaying)
             {
                 EnableOutline();
             }
@@ -132,7 +132,7 @@ namespace McOutlineFeature
             OutputOutlineMaterialsProperties.Clear();
             UpdateProperties();
 
-            if(_Enable)
+            if(_Enable && !Application.isPlaying)
             {
                 EnableOutline();
             }
@@ -146,13 +146,12 @@ namespace McOutlineFeature
         private void OnEnable()
         {
 #if UNITY_EDITOR
-
             _InitializeAndRegisterObjectsDelegate += InitializeAndRegisterObject;
             _DeinitializeAndUnregisterObjectsDelegate += DeinitializeAndUnregisterObject;
             MC_OutlineManager.InitializeObjectsDelegate += InitializeAndRegisterObject;
             MC_OutlineManager.DeinitializeObjectsDelegate += DeinitializeAndUnregisterObject;
-#endif
             InitializeAndRegisterObject();
+#endif
         }
 
         private void OnDisable()
@@ -282,7 +281,6 @@ namespace McOutlineFeature
             _InitializeAndRegisterObjectsDelegate?.Invoke();
         }
 #endif
-
         #endregion Private Methods
     }
 }
