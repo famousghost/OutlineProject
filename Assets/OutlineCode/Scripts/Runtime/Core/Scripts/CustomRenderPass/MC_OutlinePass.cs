@@ -9,7 +9,7 @@ namespace McOutlineFeature
     public sealed class MC_OutlineCustomPass : CustomPass
     {
         #region Inspector Variables
-        [SerializeField, Range(0, 255)] private int _OutlineBitMask = 15;
+        [SerializeField, Range(1, 255)] private int _OutlineBitMask = 15;
         #endregion
 
         #region Unity Methods
