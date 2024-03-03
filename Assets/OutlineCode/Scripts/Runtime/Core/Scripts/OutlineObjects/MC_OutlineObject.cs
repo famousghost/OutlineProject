@@ -118,8 +118,7 @@ namespace McOutlineFeature
                 DisableOutline();
             }
 #endif
-            MC_OutlineManager.Instance.Register(this);
-            Initialize();
+            InitializeAndRegisterObject();
         }
 
         private void OnValidate()

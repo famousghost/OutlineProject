@@ -12,17 +12,7 @@ namespace McOutlineFeature
         #region Unity Methods
         protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
         {
-            if(MC_OutlineManager.Instance == null)
-            {
-                return;
-            }
-            _StencilBufferShader = MC_OutlineManager.Instance.Settings.StencilBufferShader;
-            _OutlineShader = MC_OutlineManager.Instance.Settings.OutlineShader;
-
-            _OutlineMaterialPropertyBlock = new MaterialPropertyBlock();
-
-            _OutlineStencilBufferMaterial = CoreUtils.CreateEngineMaterial(_StencilBufferShader);
-            _OutlineMaterial = CoreUtils.CreateEngineMaterial(_OutlineShader);
+            InitNecessaryProperties();
         }
 
         protected override void Execute(CustomPassContext ctx)
@@ -36,6 +26,11 @@ namespace McOutlineFeature
 
             if (MC_OutlineManager.Instance == null)
             {
+                return;
+            }
+            if (_OutlineMaterialPropertyBlock == null)
+            {
+                InitNecessaryProperties();
                 return;
             }
             var outlineObjects = MC_OutlineManager.Instance.OutlineObjects;
@@ -107,5 +102,26 @@ namespace McOutlineFeature
         private static readonly int _OutlineColorId = Shader.PropertyToID("_OutlineColor");
 
         #endregion Private Variables
+
+        #region Private Methods
+        private void InitNecessaryProperties()
+        {
+            if(MC_OutlineManager.Instance == null)
+            {
+                return;
+            }
+            if(MC_OutlineManager.Instance.Settings == null)
+            {
+                return;
+            }
+            _StencilBufferShader = MC_OutlineManager.Instance.Settings.StencilBufferShader;
+            _OutlineShader = MC_OutlineManager.Instance.Settings.OutlineShader;
+
+            _OutlineMaterialPropertyBlock = new MaterialPropertyBlock();
+
+            _OutlineStencilBufferMaterial = CoreUtils.CreateEngineMaterial(_StencilBufferShader);
+            _OutlineMaterial = CoreUtils.CreateEngineMaterial(_OutlineShader);
+        }
+        #endregion Private Methods
     }
 }
