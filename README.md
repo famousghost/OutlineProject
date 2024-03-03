@@ -1,4 +1,6 @@
 # Outline Shader HDRP
+## Unity Version: 2022.3.18f
+## HDRP Version: 14.0.10
 ## MC_OutlineObject:
 - Attach this script to work with outline object feature
 - Adjust parameters as you want
