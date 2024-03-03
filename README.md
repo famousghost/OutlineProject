@@ -9,3 +9,6 @@
 
 After all these steps you can see this result with different objects simple and advanced like vegetation
 ![image](https://github.com/famousghost/OutlineProject/assets/23434168/b6011479-c0d2-4a73-a9de-c1aff65cb746)
+
+## Troubleshooting
+- If something went wrong with displaying this objects try to disable and enable MC_OutlineManager it could help
