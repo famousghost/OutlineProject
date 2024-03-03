@@ -45,7 +45,7 @@ Shader "Renderers/CustomOutlineHDRP"
 
              Stencil
             {
-                Ref 15
+                Ref [_OutlineBitMask]
                 Comp NotEqual
             }
 

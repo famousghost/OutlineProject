@@ -8,6 +8,9 @@ namespace McOutlineFeature
     [ExecuteAlways]
     public sealed class MC_OutlineCustomPass : CustomPass
     {
+        #region Inspector Variables
+        [SerializeField, Range(0, 255)] private int _OutlineBitMask = 15;
+        #endregion
 
         #region Unity Methods
         protected override void Setup(ScriptableRenderContext renderContext, CommandBuffer cmd)
@@ -17,6 +20,8 @@ namespace McOutlineFeature
 
         protected override void Execute(CustomPassContext ctx)
         {
+            _OutlineStencilBufferMaterial.SetInt(_OutlineMaskId, _OutlineBitMask);
+            _OutlineMaterial.SetInt(_OutlineMaskId, _OutlineBitMask);
             RenderObjects(ctx.cmd, _OutlineStencilBufferMaterial);
             RenderObjects(ctx.cmd, _OutlineMaterial);
         }
@@ -100,6 +105,7 @@ namespace McOutlineFeature
         private static readonly int _TilingId = Shader.PropertyToID("_Tiling");
         private static readonly int _OutlineSizeId = Shader.PropertyToID("_OutlineSize");
         private static readonly int _OutlineColorId = Shader.PropertyToID("_OutlineColor");
+        private static readonly int _OutlineMaskId = Shader.PropertyToID("_OutlineBitMask");
 
         #endregion Private Variables
 

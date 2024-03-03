@@ -42,7 +42,7 @@ Shader "Renderers/CustomStencilHDRP"
 
             Stencil
             {
-                Ref 15
+                Ref [_OutlineBitMask]
                 Comp Always
                 Pass Replace
             }
